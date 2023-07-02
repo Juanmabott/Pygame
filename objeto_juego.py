@@ -42,7 +42,7 @@ class Objeto_juego():
             self.contador_pasos += 1
         else:
             screen.blit(lista_imagenes, self.rectangulo["main"])
-            
+
     def update():
         pass
     def obtener_rectangulo(self,principal):

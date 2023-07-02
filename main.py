@@ -8,17 +8,8 @@ from trampa import *
 from enemigo import *
 from item import *
 from projectil import *
-def obtener_rectangulo(principal)->dict:
-    diccionario = {}
-    diccionario['main'] = principal.copy()
-    diccionario['bottom'] = pygame.Rect(principal.left, principal.bottom - 10, principal.width, 10)
-    diccionario['right'] = pygame.Rect(principal.right - 2, principal.top, 2, principal.height)
-    diccionario['left'] = pygame.Rect(principal.left, principal.top, 2 , principal.height)
-    diccionario['top'] = pygame.Rect(principal.left, principal.top, principal.width, 10)
-
-    return diccionario
-
-
+from interfaz import *
+from spawnerEnemigo import *
 ANCHO,ALTO=1900,900
 TAMAÑO_PANTALA=(ANCHO,ALTO)
 FPS=18
@@ -73,6 +64,7 @@ piso_tierra=reescalar_imagenes(plataforma_tierra,ANCHO,100)
 # rect_plataforma_tres = piso_tierra.get_rect()
 # rect_plataforma_tres.x = ANCHO-ANCHO
 # rect_plataforma_tres.y = ALTO/2+350
+corazones=reescalar_imagenes(corazones,150,50)
 
 # rectangulos = obtener_rectangulo(rect_personaje)
 # rectangulos_enemigo = obtener_rectangulo(rect_enemigo)
@@ -100,12 +92,12 @@ personaje_enemigo=Personaje_Enemigo(5,velocidad_x,
                                         x_inicial+40,
                                         761
                                         )
+spawner=SpawnerEnemigos(5)
 
 piso = pygame.Rect(0,ALTO/2+400, ANCHO, 20)
 
 
 #plataformas
-rect_piso = obtener_rectangulo(piso) #funcion
 
 # hitbox_plataforma= obtener_rectangulo(rect_plataforma)
 # hitbox_plataforma_dos= obtener_rectangulo(rect_plataforma_dos) 
@@ -119,11 +111,11 @@ lista_enemigos=[]
 lista_enemigos.append(personaje_enemigo)
 corazones_vida_chicos=reescalar_imagenes(corazones_vida,50,50)
 
-manzana=Item(100,corazones_vida_chicos,"visible",PANTALLA,(1000),(ALTO/2-50))
 trampa=Trampa(trampa_espinas,"visible",PANTALLA, (ANCHO/2), 10)
-plataforma = Plataforma(plataforma_tierra,"visible",PANTALLA,(ANCHO/2) ,(ALTO/2))
-plataforma_dos = Plataforma(plataforma_tierra,"visible",PANTALLA,(ANCHO/2-400),(ALTO/2+200))
-plataforma_tres = Plataforma(piso_tierra,"visible",PANTALLA,(ANCHO-ANCHO),(ALTO/2+350))
+manzana=Item(100,corazones_vida_chicos,PANTALLA,(1000),(ALTO/2-50))
+
+barra_vida=Interfaz(corazones[0],10,10,PANTALLA)
+
 projectil=Projectil(projectil_agua,10,1000,1000)
 run= True
 while run:
@@ -149,13 +141,18 @@ while run:
     if event.type == MOUSEBUTTONDOWN:
         if event.button == 1:
             projectil.disparo=True  # Clic izquierdo del mouse
-            
+
+    plataforma = Plataforma(plataforma_tierra,"visible",PANTALLA,(ANCHO/2) ,(ALTO/2))
+    plataforma_dos = Plataforma(plataforma_tierra,"visible",PANTALLA,(ANCHO/2-400),(ALTO/2+200))
+    plataforma_tres = Plataforma(piso_tierra,"visible",PANTALLA,(ANCHO-ANCHO),(ALTO/2+350))       
+    
+    
 
     lista_plataforma.append(plataforma)
     lista_plataforma.append(plataforma_dos)
     lista_plataforma.append(plataforma_tres)
-    for plataforma in lista_plataforma:
-        plataforma.draw(PANTALLA)
+    # for plataforma in lista_plataforma:
+    #     plataforma.draw(PANTALLA)
     pygame.draw.rect(PANTALLA, "yellow" , plataforma.rectangulo["main"], 1)
     if get_mode() == True: # dibuja rect piso y rect personaje
         pygame.draw.rect(PANTALLA, "Blue" , personaje_principal.rectangulo["main"], 1)
@@ -175,14 +172,14 @@ while run:
         for plataforma in lista_plataforma:
             pygame.draw.rect(PANTALLA, "yellow" , plataforma.rectangulo["main"], 1)
 
+    enemigos = spawner.spawnear_enemigos(personaje_enemigo)
     projectil.disparar_projectil(PANTALLA,personaje_principal,lista_enemigos,projectil_agua)
-
-
-    trampa.draw(PANTALLA)
     manzana.draw(PANTALLA)
+    barra_vida.animar_vida(corazones,PANTALLA,personaje_principal.vida)
     manzana.sumar_vida_personaje(personaje_principal)
     trampa.daniar_jugador(personaje_principal)  
-    personaje_principal.verificar_accion(que_hace,PANTALLA,rect_piso,lista_plataforma)
+    personaje_principal.verificar_accion(que_hace,PANTALLA,lista_plataforma)
     personaje_enemigo.mover_enemigo(PANTALLA,lista_plataforma)
     personaje_principal.verificar_colision_enemigo(lista_enemigos)
+    
     pygame.display.update()

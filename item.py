@@ -1,8 +1,8 @@
 from plataforma import *
 
-class Item(Plataforma):#es el hijo de objeto_juego
-    def __init__(self,valor,imagen,estado,pantalla,x,y):
-        super().__init__(imagen,estado,pantalla,x,y)
+class Item(Objeto_juego):
+    def __init__(self,valor,imagen,pantalla,x,y):
+        super().__init__(imagen,x,y)
         self.valor = valor
         self.curacion = 100
         self.pantalla = pantalla
@@ -12,7 +12,8 @@ class Item(Plataforma):#es el hijo de objeto_juego
             self.en_contacto_con_personaje = True
             personaje.vida += self.valor
             self.rectangulo['main'].y = self.rectangulo['main'].y +1000
-
+            print(self.rectangulo["main"].y)
+            self.actualizar_rectangulos()
             self.draw(self.pantalla)
             return True
         else:

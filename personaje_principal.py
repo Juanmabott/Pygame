@@ -8,13 +8,14 @@ class Personaje_principal(Personaje):
         self.__score=0
         self.gravedad= gravedad
         self.estasaltando=True
-        self.vida=100
+        self.vida=30
     def verificar_colision_enemigo(self, lista_de_enemigos):
         for enemigo in lista_de_enemigos:
             if self.rectangulo["main"].colliderect(enemigo.rectangulo["main"]):
                 self.vida-=enemigo.daño
+                #print(self.vida)
 
-    def verificar_accion(self, accion_realizada,pantalla,piso,lista_plataformas):
+    def verificar_accion(self, accion_realizada,pantalla,lista_plataformas):
         match accion_realizada:
             case "derecha":
                 if not self.estasaltando:
@@ -37,7 +38,7 @@ class Personaje_principal(Personaje):
         colision_con_plataforma = False  # Variable de bandera para controlar la colisión con alguna plataforma
 
         for plataforma in lista_plataformas:
-            if self.verificar_colision_piso(piso) or self.verificar_colision(plataforma.rectangulo):
+            if  self.verificar_colision(plataforma.rectangulo):
                 if accion_realizada != "izquierda" and accion_realizada != "derecha":
                     self.animar_movimientos(pantalla,personaje_quieto)
                 self.estasaltando = False

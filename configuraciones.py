@@ -7,12 +7,11 @@ def girar_imagenes(lista_original, flip_x, flip_y):
 
 def reescalar_imagenes(lista_imagenes, ancho, alto):
     if type(lista_imagenes)==list:
-        for lista in lista_imagenes:
-            for i in range(len(lista)):
-                lista[i] = pygame.transform.scale(lista[i], (ancho, alto))
+        for i in range(len(lista_imagenes)):
+            lista_imagenes[i] = pygame.transform.scale(lista_imagenes[i], (ancho, alto))
     else:
-        lista = pygame.transform.scale(lista_imagenes, (ancho, alto))
-    return lista
+        lista_imagenes = pygame.transform.scale(lista_imagenes, (ancho, alto))
+    return lista_imagenes
 
 trampa_espinas=pygame.image.load("pygame/sources/escenario/trampas/Ceiling Trap - Level 2.png")
 
@@ -50,3 +49,7 @@ projectil_agua=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources
                 pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/projectil/4.png"),
                 pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/projectil/5.png"),
                 pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/projectil/6.png")]
+
+corazones=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/items/0.png"),
+           pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/items/1.png"),
+           pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/items/2.png")]
