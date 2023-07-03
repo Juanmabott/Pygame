@@ -1,5 +1,6 @@
 from personaje import *
-
+from item import *
+from configuraciones import *
 class Personaje_Enemigo(Personaje):
     def __init__(self,daño,velocidad_x,velocidad_y,potencia_salto,imagen,limit_velocidad_caida,x,y):
         super().__init__(velocidad_x,velocidad_y,potencia_salto,imagen,limit_velocidad_caida,x,y)
@@ -7,7 +8,8 @@ class Personaje_Enemigo(Personaje):
         self.girando=False
         self.daño=daño
         self.vida="vivo"
-    def mover_enemigo(self,pantalla,lista_plataformas):
+    def mover_enemigo(self,pantalla,lista_plataformas,lista_items):
+        bandera=False
         bandera=False
         for plataforma in lista_plataformas:
             if self.verificar_colision(plataforma.rectangulo):
@@ -17,7 +19,7 @@ class Personaje_Enemigo(Personaje):
         else:
             self.aplicar_gravedad(1)
         for lado in self.rectangulo:       
-            if self.rectangulo[lado].x < 100:
+            if self.rectangulo[lado].x < 100:           
                 self.velocidad_x=self.velocidad_x*-1
             elif self.rectangulo[lado].x > 1900 - 80:
                 self.velocidad_x=self.velocidad_x*-1
@@ -30,5 +32,11 @@ class Personaje_Enemigo(Personaje):
                 self.imagen=girar_imagenes(self.imagen,True,False)
                 self.girando=False
             self.animar_movimientos(pantalla,self.imagen)
+        elif self.rectangulo["main"].y < 10000:
+            print(self.rectangulo["main"].y)
+            puntos = Item(100,estrella,pantalla,self.rectangulo["main"].x,self.rectangulo["main"].y)
+            lista_items.append(puntos)
+            bandera=True
+            self.mover(10000,"y")
         else:
             self.mover(10000,"y")

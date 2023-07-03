@@ -6,15 +6,26 @@ class Projectil(Objeto_juego):
         self.velocidad = velocidad
         self.disparo=False
         self.tiempo=0
-    def disparar_projectil(self,screen,personaje_principal,lista_enemigos,lista_imaegenes):   
+    def disparar_projectil(self,screen,personaje_principal,lista_enemigos,lista_imaegenes,nivel):   
         if self.disparo:
-            if self.tiempo==0:
+            if self.tiempo==0 and self.disparo:
                 self.rectangulo["main"]= personaje_principal.rectangulo["left"]
                 self.actualizar_rectangulos()
             self.tiempo +=1    
             self.mover(self.velocidad,"x")
             self.actualizar_rectangulos()
-            self.animar_projectil(screen,lista_imaegenes,lista_enemigos)
+            self.animar_projectil(screen,lista_imaegenes)
+            for enemigo in lista_enemigos:
+                if self.rectangulo["main"].colliderect(enemigo.rectangulo["main"]):
+                    nivel.contador_enemigos_derrotados+=1
+                    #print(nivel.contador_enemigos_derrotados)
+                    enemigo.vida="muerto"
+                    self.disparo= False
+                    self.tiempo = 0  
+                    self.mover(1000,"y")
+                    self.disparo=False
+                    self.actualizar_rectangulos()
+                    return True
         if self.tiempo>= 60:
             self.disparo= False
             self.tiempo = 0  
@@ -23,7 +34,7 @@ class Projectil(Objeto_juego):
             self.actualizar_rectangulos()
 
 
-    def animar_projectil(self,screen,lista_imagenes,lista_enemigos):
+    def animar_projectil(self,screen,lista_imagenes):
         if isinstance(lista_imagenes,list):
             largo = len(lista_imagenes)-1
             if self.contador_pasos > largo: 
@@ -32,7 +43,4 @@ class Projectil(Objeto_juego):
             self.contador_pasos += 1
         else:
             screen.blit(lista_imagenes, self.rectangulo["main"])
-        for enemigo in lista_enemigos:
-            if self.rectangulo["main"].colliderect(enemigo.rectangulo["main"]):
-                screen.blit(lista_imagenes[largo-1], self.rectangulo["main"])
-                enemigo.vida="muerto"
+

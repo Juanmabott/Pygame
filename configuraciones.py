@@ -1,4 +1,5 @@
 import pygame
+from constantes import *
 def girar_imagenes(lista_original, flip_x, flip_y):
     lista_girada = []
     for imagen in lista_original:
@@ -13,22 +14,34 @@ def reescalar_imagenes(lista_imagenes, ancho, alto):
         lista_imagenes = pygame.transform.scale(lista_imagenes, (ancho, alto))
     return lista_imagenes
 
-trampa_espinas=pygame.image.load("pygame/sources/escenario/trampas/Ceiling Trap - Level 2.png")
+trampa_espinas=[pygame.image.load("pygame/sources/escenario/trampas/Ceiling Trap - Level 2.png")]
 
 
 
-personaje_camina = [pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/0.png"),
-                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/1.png"),
-                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/2.png"),
-                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/3.png"),
-                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/4.png"),
-                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/5.png")]
+# personaje_camina = [pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/0.png"),
+#                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/1.png"),
+#                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/2.png"),
+#                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/3.png"),
+#                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/4.png"),
+#                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/5.png")]
 
 personaje_quieto= pygame.image.load("pygame/sources/magos/mago base/quieto/0.png")
 
-personaje_camina_izquierda = girar_imagenes(personaje_camina, True, False)
+        
 
-personaje_salta = pygame.image.load("pygame/sources/magos/mago base/quieto/0.png")
+personaje_herido= [pygame.image.load("pygame/sources/magos/mago base/herido/0.png"),
+                    pygame.image.load("pygame/sources/magos/mago base/herido/1.png")]
+
+personaje_invencible = [pygame.image.load("pygame/sources/magos/mago base/quieto/1.png"),
+                        pygame.image.load("pygame/sources/magos/mago base/quieto/0.png")]
+
+
+
+personaje_salta = [pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/salta/0.png"),
+                   pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/salta/1.png"),
+                   pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/salta/1.png"),
+                   pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/salta/1.png"),
+                   ]
 
 plataforma_tierra= pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/escenario/plataformas/plataforma_tierra.png")
 
@@ -39,6 +52,17 @@ enemigo_camina = [pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sourc
                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo planta/walk separado/3.png"),
                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo planta/walk separado/4.png"),
                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo planta/walk separado/5.png")]
+
+personaje_camina = [pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/corre/0.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/corre/1.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/corre/2.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/corre/3.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/corre/4.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/corre/5.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/corre/6.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/corre/7.png")]
+
+personaje_camina_izquierda = girar_imagenes(personaje_camina, True, False)
 
 corazones_vida=pygame.image.load("pygame/sources/items/manzana.png")
 
@@ -53,3 +77,15 @@ projectil_agua=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources
 corazones=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/items/0.png"),
            pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/items/1.png"),
            pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/items/2.png")]
+
+estrella=reescalar_imagenes(pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/items/star.png"),50,50)
+
+piso_tierra=reescalar_imagenes(plataforma_tierra,ANCHO-200,100)
+corazones=reescalar_imagenes(corazones,150,50)
+trampa_espinas=reescalar_imagenes(trampa_espinas,200,50)
+trampa_espinas=girar_imagenes(trampa_espinas,False,True)
+
+corazones_vida_chicos=reescalar_imagenes(corazones_vida,50,50)
+
+lista_animaciones = [personaje_quieto, personaje_camina, 
+                    personaje_salta, personaje_camina_izquierda]
