@@ -15,3 +15,4 @@ y_inicial = 650
 pos_actual_x = 0
 velocidad_x = 10
 velocidad_y = 0
+

@@ -1,18 +1,18 @@
 import pygame
 from pygame.locals import *
-from configuraciones import *
 class Objeto_juego():
     contador_pasos = 0
     def __init__(self,imagen,x,y):
-        self.imagen = imagen
-        if isinstance(self.imagen, list):
-            self.rectangulos = self.imagen[0].get_rect() 
-            self.rectangulos.x = x
-            self.rectangulos.y = y
+        if isinstance(imagen, list) and isinstance(imagen[0], list) and isinstance(imagen[0][0], pygame.Surface):
+            self.imagen = imagen[0][0] #indice de la primera lista
+        elif isinstance(imagen, list) and not isinstance(imagen[0], list):
+            self.imagen = imagen[0]
         else:
-            self.rectangulos = self.imagen.get_rect() 
-            self.rectangulos.x = x
-            self.rectangulos.y = y
+            self.imagen = imagen
+
+        self.rectangulos = self.imagen.get_rect() 
+        self.rectangulos.x = x
+        self.rectangulos.y = y
         self.rectangulo = self.obtener_rectangulo(self.rectangulos)
     def draw(self,screen):
         screen.blit(self.imagen,self.rectangulo["main"])

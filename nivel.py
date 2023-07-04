@@ -14,7 +14,7 @@ from nivel import *
 from constantes import *
 
 class Nivel:
-    def __init__(self,PANTALLA):
+    def __init__(self,volumen_global):
         self.lista_items_puntos = []
         self.lista_items_curacion=[]
         self.lista_plataforma = []
@@ -22,17 +22,22 @@ class Nivel:
         self.enemigos_restantes = 9
         self.contador_enemigos_derrotados=0
         self.lugar_spawn_enemigos="derecha"
+        self.pantalla= pygame.display.set_mode(TAMAÑO_PANTALA)
         
-        self.barra_vida=Interfaz(corazones[0],10,10,PANTALLA)
+
+        self.barra_vida=Interfaz(corazones[0],10,10,self.pantalla)
 
         self.projectil=Projectil(projectil_agua,10,1000,1000)
+        self.fondo=pygame.image.load("pygame\\sources\\fondos\\background0.png")
+        self.fondo = pygame.transform.scale(self.fondo,TAMAÑO_PANTALA)
         
-
-        self.lista_plataforma.append(Plataforma(plataforma_tierra,"visible",PANTALLA,(ANCHO/2) ,(ALTO/2)))
-        self.lista_plataforma.append(Plataforma(plataforma_tierra,"visible",PANTALLA,(ANCHO/2-400),(ALTO/2+200)))
-        self.lista_plataforma.append(Plataforma(piso_tierra,"visible",PANTALLA,(ANCHO-ANCHO),(ALTO/2+350)))
-        self.lista_plataforma.append(Plataforma(piso_tierra,"visible",PANTALLA,(ANCHO-ANCHO),(ALTO/2+350)))
-        self.lista_plataforma.append(Plataforma(plataforma_tierra,"visible",PANTALLA,(ANCHO/2-800),(ALTO/2+100)))
+        self.pantalla.blit(self.fondo, (0, 0))
+        
+        self.lista_plataforma.append(Plataforma(plataforma_tierra,"visible",self.pantalla,(ANCHO/2) ,(ALTO/2)))
+        self.lista_plataforma.append(Plataforma(plataforma_tierra,"visible",self.pantalla,(ANCHO/2-400),(ALTO/2+200)))
+        self.lista_plataforma.append(Plataforma(piso_tierra,"visible",self.pantalla,(ANCHO-ANCHO),(ALTO/2+350)))
+        self.lista_plataforma.append(Plataforma(piso_tierra,"visible",self.pantalla,(ANCHO-ANCHO),(ALTO/2+350)))
+        self.lista_plataforma.append(Plataforma(plataforma_tierra,"visible",self.pantalla,(ANCHO/2-800),(ALTO/2+100)))
 
         self.personaje_principal=Personaje_principal(velocidad_x,
                                         velocidad_y,
@@ -52,13 +57,16 @@ class Nivel:
                                         761
                                         )
         
-        self.trampa=Trampa(trampa_espinas[0],"visible",PANTALLA, (ANCHO-210), ALTO/2+400)
-        self.lista_items_curacion.append(Item(100,corazones_vida_chicos,PANTALLA,(1000),(ALTO/2-50)))
+        self.trampa=Trampa(trampa_espinas[0],"visible",self.pantalla, (ANCHO-210), ALTO/2+400)
+        self.lista_items_curacion.append(Item(100,corazones_vida_chicos,self.pantalla,(1000),(ALTO/2-50)))
         self.lista_enemigos.append(self.personaje_enemigo)
-
+        self.sonido_daño = pygame.mixer.Sound("C:/Users/botta/Documents/pyton/pygame/sources/sonidos/damage.mp3")
+        self.sonido_puntos= pygame.mixer.Sound("C:/Users/botta/Documents/pyton/pygame/sources/sonidos/coin.mp3")
+        self.sonido_daño.set_volume(volumen_global)
+        self.sonido_puntos.set_volume(volumen_global)
     def spawnear_enemigos(self,personaje_enemigo):
         self.lugar_spawn_enemigos==("derecha")
-        print(self.contador_enemigos_derrotados)
+    
         if self.contador_enemigos_derrotados%10 == 0 and  self.contador_enemigos_derrotados!=0:
             #print(self.contador_enemigos_derrotados)
             if self.lugar_spawn_enemigos=="izquierda":
@@ -103,29 +111,29 @@ class Nivel:
                 #print(len(self.lista_enemigos))
             self.enemigos_restantes=0
 
-    def actualizar(self,screen,que_hace):
+    def actualizar(self,que_hace):
+        self.pantalla.blit(self.fondo, (0, 0))
         self.personaje_principal = self.personaje_principal
         self.lista_enemigos = self.lista_enemigos
 
         self.plataformas = self.lista_plataforma
-        self.personaje_principal.verificar_accion(que_hace,screen,self.lista_plataforma)
-        self.personaje_principal.verificar_colision_enemigo(self.lista_enemigos)
+        self.personaje_principal.verificar_accion(que_hace,self.pantalla,self.lista_plataforma,lista_animaciones)
+        self.personaje_principal.verificar_colision_enemigo(self.lista_enemigos,self.sonido_daño)
         self.trampa.daniar_jugador(self.personaje_principal)  
         for enemigo in self.lista_enemigos:
-            enemigo.mover_enemigo(screen,self.lista_plataforma,self.lista_items_puntos)
+            enemigo.mover_enemigo(self.pantalla,self.lista_plataforma,self.lista_items_puntos)
         for plataforma in self.plataformas:
-            plataforma.draw(screen)
+            plataforma.draw(self.pantalla)
         for recompensa in self.lista_items_puntos:
-            recompensa.draw(screen)
-            recompensa.sumar_puntaje_personaje(self.personaje_principal)
+            recompensa.draw(self.pantalla)
+            recompensa.sumar_puntaje_personaje(self.personaje_principal,self.sonido_puntos)
         if self.contador_enemigos_derrotados<50:
             self.spawnear_enemigos(self.lista_enemigos[0])
+
+        self.projectil.disparar_projectil(self.pantalla,self.personaje_principal,self.lista_enemigos,projectil_agua,self)
         
-            
-        self.projectil.disparar_projectil(screen,self.personaje_principal,self.lista_enemigos,projectil_agua,self)
-        
-        self.barra_vida.animar_vida(corazones,screen,self.personaje_principal.vida)
+        self.barra_vida.animar_vida(corazones,self.pantalla,self.personaje_principal.vida)
         for curacion in self.lista_items_curacion:
-            curacion.draw(screen)
+            curacion.draw(self.pantalla)
             curacion.sumar_vida_personaje(self.personaje_principal)
-        self.trampa.draw(screen)
+        self.trampa.draw(self.pantalla)

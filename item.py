@@ -16,13 +16,15 @@ class Item(Objeto_juego):
             return True
         else:
             self.en_contacto_con_personaje = False
-    def sumar_puntaje_personaje(self, personaje):
+    def sumar_puntaje_personaje(self, personaje,sonido_daño):
         if self.rectangulo['main'].colliderect(personaje.rectangulo['main']):
             self.en_contacto_con_personaje = True
             self.valor = 30
             personaje.__score += self.valor
             self.rectangulo['main'].y = 1000
             self.draw(self.pantalla)
+            sonido_daño.play()
+            pygame.time.wait(int(sonido_daño.get_length() * 50))
             return True
         else:
             self.en_contacto_con_personaje = False
