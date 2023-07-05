@@ -27,7 +27,7 @@ class Nivel:
 
         self.barra_vida=Interfaz(corazones[0],10,10,self.pantalla)
 
-        self.projectil=Projectil(projectil_agua,10,1000,1000)
+        self.projectil=Projectil(projectil_agua,50,10,1000,1000)
         self.fondo=pygame.image.load("pygame\\sources\\fondos\\background0.png")
         self.fondo = pygame.transform.scale(self.fondo,TAMAÑO_PANTALA)
         
@@ -48,7 +48,7 @@ class Nivel:
                                         x_inicial,
                                         y_inicial)
         
-        self.personaje_enemigo=Personaje_Enemigo(50,10,
+        self.personaje_enemigo=Personaje_Enemigo(100,50,10,
                                         0,
                                         60,
                                         enemigo_camina,
@@ -80,7 +80,8 @@ class Nivel:
         if self.enemigos_restantes >0:
             for i in range(self.enemigos_restantes):
                 if self.lugar_spawn_enemigos =="izquierda":
-                    enemigo = Personaje_Enemigo(daño=personaje_enemigo.daño,
+                    enemigo = Personaje_Enemigo(vida=personaje_enemigo.vida,
+                                                daño=personaje_enemigo.daño,
                                         velocidad_x=personaje_enemigo.velocidad_x,
                                         velocidad_y=personaje_enemigo.velocidad_y,
                                         potencia_salto=personaje_enemigo.potencia_salto,
@@ -89,7 +90,8 @@ class Nivel:
                                         x=0,
                                         y=761)
                 else:
-                    enemigo = Personaje_Enemigo(daño=personaje_enemigo.daño,
+                    enemigo = Personaje_Enemigo(vida=personaje_enemigo.vida
+                                                ,daño=personaje_enemigo.daño,
                                         velocidad_x=personaje_enemigo.velocidad_x,
                                         velocidad_y=personaje_enemigo.velocidad_y,
                                         potencia_salto=personaje_enemigo.potencia_salto,
@@ -121,14 +123,14 @@ class Nivel:
         self.personaje_principal.verificar_colision_enemigo(self.lista_enemigos,self.sonido_daño)
         self.trampa.daniar_jugador(self.personaje_principal)  
         for enemigo in self.lista_enemigos:
-            enemigo.mover_enemigo(self.pantalla,self.lista_plataforma,self.lista_items_puntos)
+            enemigo.mover_enemigo(self.pantalla,self.lista_plataforma,self.lista_items_puntos,enemigo_camina)
         for plataforma in self.plataformas:
             plataforma.draw(self.pantalla)
         for recompensa in self.lista_items_puntos:
             recompensa.draw(self.pantalla)
             recompensa.sumar_puntaje_personaje(self.personaje_principal,self.sonido_puntos)
         if self.contador_enemigos_derrotados<50:
-            self.spawnear_enemigos(self.lista_enemigos[0])
+            self.spawnear_enemigos(self.personaje_enemigo)
 
         self.projectil.disparar_projectil(self.pantalla,self.personaje_principal,self.lista_enemigos,projectil_agua,self)
         
@@ -137,3 +139,5 @@ class Nivel:
             curacion.draw(self.pantalla)
             curacion.sumar_vida_personaje(self.personaje_principal)
         self.trampa.draw(self.pantalla)
+        if self.contador_enemigos_derrotados>50:
+            return 1

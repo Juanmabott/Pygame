@@ -3,12 +3,11 @@ from constantes import *
 def girar_imagenes(lista_original, flip_x, flip_y):
     lista_girada = []
     if isinstance(lista_original, list):
-        
         for imagen in lista_original:
             lista_girada.append(pygame.transform.flip(imagen, flip_x, flip_y))
     else:
         lista_girada.append(pygame.transform.flip(lista_original, flip_x, flip_y))
-        print("no es una lista")
+    
     return lista_girada
 
 def reescalar_imagenes(lista_imagenes, ancho, alto):
@@ -21,17 +20,7 @@ def reescalar_imagenes(lista_imagenes, ancho, alto):
 
 trampa_espinas=[pygame.image.load("pygame/sources/escenario/trampas/Ceiling Trap - Level 2.png")]
 
-
-
-# personaje_camina = [pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/0.png"),
-#                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/1.png"),
-#                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/2.png"),
-#                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/3.png"),
-#                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/4.png"),
-#                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago base/camina/5.png")]
-
 plataforma_tierra= pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/escenario/plataformas/plataforma_tierra.png")
-
 
 #enemigo planta
 enemigo_camina = [pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo planta/walk separado/0.png"),
@@ -40,6 +29,26 @@ enemigo_camina = [pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sourc
                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo planta/walk separado/3.png"),
                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo planta/walk separado/4.png"),
                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo planta/walk separado/5.png")]
+
+#enemigo lvl 2
+
+enemigo_camina_lvl2 = [pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo dos/0.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo dos/1.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo dos/2.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo dos/3.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo dos/4.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo dos/5.png")]
+
+enemigo_camina_lvl2=reescalar_imagenes(enemigo_camina_lvl2,200,100)
+
+enemigo_camina_lvl3 = [pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo tres/0.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo tres/1.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo tres/2.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo tres/3.png")]
+
+
+
+
 #personaje
 personaje_quieto= [pygame.image.load("pygame/sources/magos/mago base/quieto/0.png")]
 
@@ -109,13 +118,25 @@ corazones=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/item
 
 estrella=reescalar_imagenes(pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/items/star.png"),50,50)
 
+
 piso_tierra=reescalar_imagenes(plataforma_tierra,ANCHO-200,100)
+
+columna=[pygame.image.load("pygame/sources/escenario/plataformas/columna.png")]
+columna=reescalar_imagenes(columna,200,400)
+
+nivel_2_plataforma_normal=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/escenario/plataformas/twilight-tiles.png")]
+
+nivel_2_plataforma=reescalar_imagenes(nivel_2_plataforma_normal,1900,100)
+
+nivel_2_plataforma_normal=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/escenario/plataformas/twilight-tiles.png")]
 corazones=reescalar_imagenes(corazones,150,50)
+
 trampa_espinas=reescalar_imagenes(trampa_espinas,200,50)
+
 trampa_espinas=girar_imagenes(trampa_espinas,False,True)
 
 corazones_vida_chicos=reescalar_imagenes(corazones_vida,50,50)
-
+#girar_imagenes(enemigo_camina_lvl2,True,False)
 lista_animaciones = [personaje_quieto, 
                         personaje_camina, 
                         personaje_salta, 

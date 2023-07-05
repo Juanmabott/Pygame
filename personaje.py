@@ -33,18 +33,30 @@ class Personaje(Objeto_juego):
             return False
             
     def verificar_colision(self, plataforma):
+        retorno=False
         if self.rectangulo['bottom'].colliderect(plataforma['top']):
+            retorno= True
             self.en_contacto_con_plataforma = True
             self.rectangulo['main'].bottom = plataforma['top'].top+2
             self.actualizar_rectangulos()
             
-            return True
-        elif self.rectangulo['main'].colliderect(plataforma['bottom']):
-            self.rectangulo['main'].top = plataforma['bottom'].bottom 
+        elif self.rectangulo['top'].colliderect(plataforma['bottom']):
+            
+            retorno= 1
+            self.rectangulo['main'].top = plataforma['main'].bottom+10 
             self.actualizar_rectangulos()
-            return 1
-        else:
-            return False
+            
+        elif self.rectangulo['main'].colliderect(plataforma['left']):
+            retorno= 2
+            self.rectangulo['main'].right = plataforma['left'].left-8
+            self.actualizar_rectangulos()
+            
+        elif self.rectangulo['main'].colliderect(plataforma['right']):
+            retorno= 3
+            self.rectangulo['main'].left = plataforma['right'].right+8
+            self.actualizar_rectangulos()
+            
+        return retorno
         
     def verificar_colision_enemigo(self):
         pass

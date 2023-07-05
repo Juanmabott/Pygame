@@ -1,7 +1,7 @@
 from nivel import *
 from formulario import *
 from nivel2 import *
-
+from nivel3 import *
 
 pygame.init()
 pygame.mixer.init()
@@ -52,12 +52,12 @@ bandera_jugar=False
 bandera_menu=True
 
 volumen_global=0.5
+niveles_terminados=[0,0,0]
 
 while run:
     RELOJ.tick(FPS)
     lista_eventos = pygame.event.get()
     mouse_pos = pygame.mouse.get_pos()
-    
     for event in lista_eventos:
         if event.type == pygame.QUIT:
             run = False
@@ -104,15 +104,23 @@ while run:
                         match(formula.nombre):
                             case "nivel1" :
                                 if formula.active:
-                                    bandera_menu=False
-                                    bandera_jugar=True
-                                    nivel_iniciado=True
-                                    nivel_seleccionado=1
+                                    if niveles_terminados==[0,0,0]:
+                                        bandera_menu=False
+                                        bandera_jugar=True
+                                        nivel_iniciado=True
+                                        nivel_seleccionado=1
                             case "nivel2" :
-                                    bandera_menu=False
-                                    bandera_jugar=True
-                                    nivel_iniciado=True
-                                    nivel_seleccionado=2
+                                    if niveles_terminados==[1,0,0]:
+                                        bandera_menu=False
+                                        bandera_jugar=True
+                                        nivel_iniciado=True
+                                        nivel_seleccionado=2
+                            case "nivel3" :
+                                    if niveles_terminados==[1,1,0]:
+                                        bandera_menu=False
+                                        bandera_jugar=True
+                                        nivel_iniciado=True
+                                        nivel_seleccionado=3
                     formula.visible="visible"
                     formula.set_active(True)
                 else:
@@ -129,14 +137,12 @@ while run:
                         elif ajustes.nombre=="bajarVolumen":
                             if volumen_global<=1 and volumen_global>=0:
                                 volumen_global-=0.1
-                                print(volumen_global,"\n\n")
                                 
                         elif ajustes.nombre=="cambiarVolumen":
                             if volumen_global>0:
-                                volumen_global=1
-                                print(volumen_global,"\n\n")
-                            else:
                                 volumen_global=0
+                            else:
+                                volumen_global=1
                         elif ajustes.nombre=="salirVolumen":
                             bandera_opciones=False
                             bandera_menu=True
@@ -170,7 +176,6 @@ while run:
             que_hace = "quieto"
 
     if nivel_iniciado and not bandera:
-        print(volumen_global,"\n\n")
         match nivel_seleccionado:
             case 1:
                 nivel=Nivel(volumen_global)
@@ -178,8 +183,26 @@ while run:
             case 2:
                 nivel=NivelDos(volumen_global)
                 bandera=True
+            case 3:
+                nivel=NivelTres(volumen_global)
+                bandera=True
+            
     elif bandera:
-        nivel.actualizar(que_hace)
+        niveles=nivel.actualizar(que_hace)
+        print(nivel.contador_enemigos_derrotados)
+        match niveles:
+            case 1:
+                niveles_terminados=[1,0,0]
+                nivel_seleccionado=2
+                bandera=False
+            case 2:
+                niveles_terminados=[1,1,0]
+                nivel_seleccionado=3
+                bandera=False
+            case 3:
+                niveles_terminados=[1,1,1]
+                bandera=False
+
         if event.type == MOUSEBUTTONDOWN:
             if event.button == 1:
                 nivel.projectil.disparo=True 

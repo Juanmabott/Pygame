@@ -1,11 +1,12 @@
 from objeto_juego import *
 
 class Projectil(Objeto_juego):
-    def __init__(self,imagen,velocidad,x,y):
+    def __init__(self,imagen,daño,velocidad,x,y):
         super().__init__(imagen,x,y)
         self.velocidad = velocidad
         self.disparo=False
         self.tiempo=0
+        self.daño=daño
     def disparar_projectil(self,screen,personaje_principal,lista_enemigos,lista_imaegenes,nivel):   
         if self.disparo:
             if self.tiempo==0 and self.disparo:
@@ -19,7 +20,7 @@ class Projectil(Objeto_juego):
                 if self.rectangulo["main"].colliderect(enemigo.rectangulo["main"]):
                     nivel.contador_enemigos_derrotados+=1
                     #print(nivel.contador_enemigos_derrotados)
-                    enemigo.vida="muerto"
+                    enemigo.vida-=self.daño
                     self.disparo= False
                     self.tiempo = 0  
                     self.mover(1000,"y")
