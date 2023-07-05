@@ -141,5 +141,7 @@ class NivelDos:
             curacion.draw(self.pantalla)
             curacion.sumar_vida_personaje(self.personaje_principal)
         #self.trampa.draw(self.pantalla)
+        if self.personaje_principal.vida<=0:
+            return "perdio"
         if self.contador_enemigos_derrotados>5:
             return 2

@@ -32,32 +32,41 @@ form_level3 = Form("nivel3",window, 400, window_height // 2 + 75, 200, 50, (165,
 
 form_seleccion_level=[form_level1, form_level2, form_level3]
 
-form_volumen_mas = Form("subirVolumen",window, 400, window_height // 2 - 75, 200, 50, (165, 42, 42), (0, 0, 255),active=False, visible="invisible",imagen = "pygame/sources/menu/letras blancas/numeros/1.png")
-form_volumen_menos = Form("bajarVolumen",window, 400, window_height // 2, 200, 50, (165, 42, 42), (255, 0, 0), active=False, visible="invisible",imagen = "pygame/sources/menu/letras blancas/numeros/2.png")
-form_volumen_switch = Form("cambiarVolumen",window, 400, window_height // 2 + 75, 200, 50, (165, 42, 42), (0, 255, 0), active=False, visible="invisible",imagen = "pygame/sources/menu/letras blancas/numeros/3.png")
-form_volumen_salir = Form("salirVolumen",window, 400, window_height // 2 + 175, 200, 50, (165, 42, 42), (0, 255, 0), active=False, visible="invisible",imagen = "C:/Users/botta/Documents/pyton/pygame/sources/menu/letras blancas/menu principal/salir.png")
+form_volumen_mas = Form("subirVolumen",window, 400, window_height // 2 - 75, 200, 50, (165, 42, 42), (0, 0, 255),active=False, visible="invisible",imagen ="pygame/sources/menu/letras blancas/menu principal/subirVolumen.png")
+form_volumen_menos = Form("bajarVolumen",window, 400, window_height // 2, 200, 50, (165, 42, 42), (255, 0, 0), active=False, visible="invisible",imagen = "pygame/sources/menu/letras blancas/menu principal/bajarVolumen.png")
+form_volumen_switch = Form("cambiarVolumen",window, 400, window_height // 2 + 75, 200, 50, (165, 42, 42), (0, 255, 0), active=False, visible="invisible",imagen = "pygame/sources/menu/letras blancas/menu principal/alternarVolumen.png")
+form_volumen_salir = Form("salirVolumen",window, 400, window_height // 2 + 175, 200, 50, (165, 42, 42), (0, 255, 0), active=False, visible="invisible",imagen = "pygame/sources/menu/letras blancas/menu principal/salir.png")
+
 form_volumen_opciones=[form_volumen_mas,form_volumen_menos,form_volumen_switch,form_volumen_salir]
 
+form_pausa = Form("pausa",window, 400, 1800, 50, 50, (165, 42, 42), (0, 0, 255),active=False, visible="invisible",imagen ="pygame/sources/menu/letras blancas/menu principal/salir.png")
+
+form_pausa_lista=[form_pausa]
 piso = pygame.Rect(0,ALTO/2+400, ANCHO, 20)
 window_width = 800
 window_height = 600
 window = pygame.display.set_mode((window_width, window_height))
-pygame.display.set_caption("Juego")
+pygame.display.set_caption("Spell Casters")
+run=True
+
 
 nivel_iniciado=False
 bandera=False
 bandera_opciones=False
-run=True
+
 bandera_jugar=False
 bandera_menu=True
 
 volumen_global=0.5
 niveles_terminados=[0,0,0]
 
+perdio=False
+
 while run:
     RELOJ.tick(FPS)
     lista_eventos = pygame.event.get()
     mouse_pos = pygame.mouse.get_pos()
+    print(mouse_pos)
     for event in lista_eventos:
         if event.type == pygame.QUIT:
             run = False
@@ -73,9 +82,8 @@ while run:
         pygame.mixer.music.set_volume(volumen_global)
         pygame.mixer.music.play(loops=-1)
 
-
+       
         if pygame.mouse.get_pressed()[0]:
-            
             for form in formularios_menu:
                 if bandera_menu:
                     if form.slave_rect.collidepoint(mouse_pos):
@@ -106,19 +114,21 @@ while run:
                                 if formula.active:
                                     if niveles_terminados==[0,0,0]:
                                         bandera_menu=False
-                                        bandera_jugar=True
+                                        bandera_jugar=False
                                         nivel_iniciado=True
                                         nivel_seleccionado=1
+                                        form_pausa.set_active(True)
+                                        form_pausa.visible="visible"
                             case "nivel2" :
                                     if niveles_terminados==[1,0,0]:
                                         bandera_menu=False
-                                        bandera_jugar=True
+                                        bandera_jugar=False
                                         nivel_iniciado=True
                                         nivel_seleccionado=2
                             case "nivel3" :
                                     if niveles_terminados==[1,1,0]:
                                         bandera_menu=False
-                                        bandera_jugar=True
+                                        bandera_jugar=False
                                         nivel_iniciado=True
                                         nivel_seleccionado=3
                     formula.visible="visible"
@@ -129,7 +139,7 @@ while run:
 
             
             for ajustes in form_volumen_opciones:
-                if bandera_opciones:
+                if bandera_opciones and not bandera_menu:
                     if ajustes.clicked(mouse_pos):
                         if ajustes.nombre=="subirVolumen":
                             if volumen_global<=1 and volumen_global>=0:
@@ -154,9 +164,13 @@ while run:
                 
                     #form.set_active(True)
                     #nivel_iniciado = True 
+            if form_pausa.clicked(mouse_pos):
+                bandera_menu=True
+                bandera_jugar=False
+                nivel_iniciado=False
 
     pygame.draw.rect(window, (0,0,0), (0, 0, window_width, window_height))
-    for form in [form1, form2, form3, form_level1, form_level2, form_level3]+ form_volumen_opciones:
+    for form in [form1, form2, form3, form_level1, form_level2, form_level3]+ form_volumen_opciones+ form_pausa_lista:
         if form.is_active() and form.visible == "visible":
             pygame.draw.rect(window, form.color_border, form.slave_rect, 3)
             form.draw()    
@@ -175,7 +189,7 @@ while run:
         else:
             que_hace = "quieto"
 
-    if nivel_iniciado and not bandera:
+    if (nivel_iniciado and not bandera):
         match nivel_seleccionado:
             case 1:
                 nivel=Nivel(volumen_global)
@@ -186,6 +200,19 @@ while run:
             case 3:
                 nivel=NivelTres(volumen_global)
                 bandera=True
+            
+    if perdio:
+        window = pygame.display.set_mode((window_width, window_height))
+        nivel_iniciado=False
+        bandera=False
+        bandera_opciones=False
+
+        bandera_jugar=False
+        bandera_menu=True
+
+        volumen_global=0.5
+
+        perdio=False
             
     elif bandera:
         niveles=nivel.actualizar(que_hace)
@@ -202,6 +229,8 @@ while run:
             case 3:
                 niveles_terminados=[1,1,1]
                 bandera=False
+            case "perdio":
+                perdio=True
 
         if event.type == MOUSEBUTTONDOWN:
             if event.button == 1:

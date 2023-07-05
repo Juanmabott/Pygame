@@ -161,7 +161,9 @@ class NivelTres:
         for curacion in self.lista_items_curacion:
             curacion.draw(self.pantalla)
             curacion.sumar_vida_personaje(self.personaje_principal)
-        
+
+        if self.personaje_principal.vida<=0:
+            return "perdio"
         if self.personaje_enemigo.estado=="muerto":
             return 3
 
