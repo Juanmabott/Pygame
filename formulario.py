@@ -3,7 +3,7 @@ from pygame.locals import *
 
 class Form():
     active_form = None
-    def __init__(self,nombre,master_surface,x,y,w,h,color_background,color_border,active,visible,imagen):
+    def __init__(self,nombre,master_surface,x,y,w,h,color_background,color_border,active,imagen):
         self.nombre= nombre
         self.master_surface = master_surface
         self.x = x
@@ -20,7 +20,6 @@ class Form():
         self.imagen= imagen
         self.x = x
         self.y = y
-        self.visible= visible
 
         if(self.color_background != None):
             self.surface.fill(self.color_background)
@@ -42,4 +41,11 @@ class Form():
         if self.slave_rect.collidepoint(mouse_pos):
             if pygame.mouse.get_pressed()[0]:
                 return True
-    
+
+    def draw_if_active(self,pantalla):
+        if self.is_active():
+            print(self.nombre)
+            pygame.draw.rect(pantalla, self.color_border, self.slave_rect, 3)
+            self.draw()    
+            pantalla.blit(self.surface, (self.x, self.y))
+

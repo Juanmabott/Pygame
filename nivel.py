@@ -12,7 +12,7 @@ from interfaz import *
 from spawnerEnemigo import *
 from nivel import *
 from constantes import *
-
+from formulario import *
 class Nivel:
     def __init__(self,volumen_global):
         self.lista_items_puntos = []
@@ -23,6 +23,7 @@ class Nivel:
         self.contador_enemigos_derrotados=0
         self.lugar_spawn_enemigos="derecha"
         self.pantalla= pygame.display.set_mode(TAMAÑO_PANTALA)
+        self.paused= False
         
 
         self.barra_vida=Interfaz(corazones[0],10,10,self.pantalla)
@@ -31,8 +32,12 @@ class Nivel:
         self.fondo=pygame.image.load("pygame\\sources\\fondos\\background0.png")
         self.fondo = pygame.transform.scale(self.fondo,TAMAÑO_PANTALA)
         
-        self.pantalla.blit(self.fondo, (0, 0))
-        
+        pygame.display.flip()
+
+        self.form_set_pausa = Form("set_pausa", self.pantalla, ANCHO - 200 - 10, 10, 200, 50, (165, 42, 42), (0, 0, 255), active=True, imagen="pygame/sources/menu/letras blancas/menu principal/salir.png")
+
+        self.form_pausa = Form("pausa", self.pantalla, ANCHO/2, 10, 200, 50, (165, 42, 42), (0, 0, 255), active=False, imagen="pygame/sources/menu/letras blancas/menu principal/jugar.png")
+
         self.lista_plataforma.append(Plataforma(plataforma_tierra,"visible",self.pantalla,(ANCHO/2) ,(ALTO/2)))
         self.lista_plataforma.append(Plataforma(plataforma_tierra,"visible",self.pantalla,(ANCHO/2-400),(ALTO/2+200)))
         self.lista_plataforma.append(Plataforma(piso_tierra,"visible",self.pantalla,(ANCHO-ANCHO),(ALTO/2+350)))
@@ -113,33 +118,51 @@ class Nivel:
                 #print(len(self.lista_enemigos))
             self.enemigos_restantes=0
 
-    def actualizar(self,que_hace):
-        self.pantalla.blit(self.fondo, (0, 0))
-        self.personaje_principal = self.personaje_principal
-        self.lista_enemigos = self.lista_enemigos
+    def actualizar(self,que_hace,mouse_pos):
 
-        self.plataformas = self.lista_plataforma
-        self.personaje_principal.verificar_accion(que_hace,self.pantalla,self.lista_plataforma,lista_animaciones)
-        self.personaje_principal.verificar_colision_enemigo(self.lista_enemigos,self.sonido_daño)
-        self.trampa.daniar_jugador(self.personaje_principal)  
-        for enemigo in self.lista_enemigos:
-            enemigo.mover_enemigo(self.pantalla,self.lista_plataforma,self.lista_items_puntos,enemigo_camina)
-        for plataforma in self.plataformas:
-            plataforma.draw(self.pantalla)
-        for recompensa in self.lista_items_puntos:
-            recompensa.draw(self.pantalla)
-            recompensa.sumar_puntaje_personaje(self.personaje_principal,self.sonido_puntos)
-        if self.contador_enemigos_derrotados<50:
-            self.spawnear_enemigos(self.personaje_enemigo)
+        if self.paused:
+            self.pantalla.blit(self.fondo, (0, 0))
+            self.form_pausa.draw_if_active(self.pantalla)  
+            if self.form_pausa.clicked(mouse_pos):
+                self.form_pausa.set_active(False)
+                self.form_set_pausa.set_active(True)
+                self.paused=False
+        else:
+            self.pantalla.blit(self.fondo, (0, 0))
+            self.personaje_principal = self.personaje_principal
+            self.lista_enemigos = self.lista_enemigos
 
-        self.projectil.disparar_projectil(self.pantalla,self.personaje_principal,self.lista_enemigos,projectil_agua,self)
-        
-        self.barra_vida.animar_vida(corazones,self.pantalla,self.personaje_principal.vida)
-        for curacion in self.lista_items_curacion:
-            curacion.draw(self.pantalla)
-            curacion.sumar_vida_personaje(self.personaje_principal)
-        self.trampa.draw(self.pantalla)
-        if self.personaje_principal.vida<=0:
-            return "perdio"
-        if self.contador_enemigos_derrotados>50:
-            return 1
+            self.plataformas = self.lista_plataforma
+            self.personaje_principal.verificar_accion(que_hace,self.pantalla,self.lista_plataforma,lista_animaciones)
+            self.personaje_principal.verificar_colision_enemigo(self.lista_enemigos,self.sonido_daño)
+            self.trampa.daniar_jugador(self.personaje_principal)  
+            for enemigo in self.lista_enemigos:
+                enemigo.mover_enemigo(self.pantalla,self.lista_plataforma,self.lista_items_puntos,enemigo_camina)
+            for plataforma in self.plataformas:
+                plataforma.draw(self.pantalla)
+            for recompensa in self.lista_items_puntos:
+                recompensa.draw(self.pantalla)
+                recompensa.sumar_puntaje_personaje(self.personaje_principal,self.sonido_puntos)
+            if self.contador_enemigos_derrotados<50:
+                self.spawnear_enemigos(self.personaje_enemigo)
+
+            self.projectil.disparar_projectil(self.pantalla,self.personaje_principal,self.lista_enemigos,projectil_agua,self)
+            
+            self.barra_vida.animar_vida(corazones,self.pantalla,self.personaje_principal.vida)
+            for curacion in self.lista_items_curacion:
+                curacion.draw(self.pantalla)
+                curacion.sumar_vida_personaje(self.personaje_principal)
+            self.trampa.draw(self.pantalla)
+
+            self.form_set_pausa.draw_if_active(self.pantalla)
+
+            if self.form_set_pausa.clicked(mouse_pos):
+                    self.form_set_pausa.set_active(False)
+                    self.form_pausa.set_active(True)
+                    self.paused=True
+
+            if self.personaje_principal.vida<=0:
+                return "perdio"
+            if self.contador_enemigos_derrotados>50:
+                return 1
+            
