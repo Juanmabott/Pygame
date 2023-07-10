@@ -13,13 +13,16 @@ from spawnerEnemigo import *
 from nivel import *
 from constantes import *
 from formulario import *
+import sys
+
+
 class Nivel:
     def __init__(self,volumen_global):
         self.lista_items_puntos = []
         self.lista_items_curacion=[]
         self.lista_plataforma = []
         self.lista_enemigos=[]
-        self.enemigos_restantes = 9
+        self.enemigos_restantes = 10
         self.contador_enemigos_derrotados=0
         self.lugar_spawn_enemigos="derecha"
         self.pantalla= pygame.display.set_mode(TAMAÑO_PANTALA)
@@ -28,15 +31,15 @@ class Nivel:
 
         self.barra_vida=Interfaz(corazones[0],10,10,self.pantalla)
 
-        self.projectil=Projectil(projectil_agua,50,10,1000,1000)
+        self.projectil=Projectil(projectil_agua,100,10,1000,1000)
         self.fondo=pygame.image.load("pygame\\sources\\fondos\\background0.png")
         self.fondo = pygame.transform.scale(self.fondo,TAMAÑO_PANTALA)
         
         pygame.display.flip()
 
-        self.form_set_pausa = Form("set_pausa", self.pantalla, ANCHO - 200 - 10, 10, 200, 50, (165, 42, 42), (0, 0, 255), active=True, imagen="pygame/sources/menu/letras blancas/menu principal/salir.png")
+        self.form_set_pausa = Form("set_pausa", self.pantalla, ANCHO - 200 - 10, 10, 200, 50, (165, 42, 42), (0, 0, 255), active=True, imagen="pygame/sources/menu/letras blancas/menu principal/salir.jpg")
 
-        self.form_pausa = Form("pausa", self.pantalla, ANCHO/2, 10, 200, 50, (165, 42, 42), (0, 0, 255), active=False, imagen="pygame/sources/menu/letras blancas/menu principal/jugar.png")
+        self.form_pausa = Form("pausa", self.pantalla, ANCHO/2, 10, 200, 50, (165, 42, 42), (0, 0, 255), active=False, imagen="pygame/sources/menu/letras blancas/menu principal/jugar.jpg")
 
         self.lista_plataforma.append(Plataforma(plataforma_tierra,"visible",self.pantalla,(ANCHO/2) ,(ALTO/2)))
         self.lista_plataforma.append(Plataforma(plataforma_tierra,"visible",self.pantalla,(ANCHO/2-400),(ALTO/2+200)))
@@ -64,12 +67,12 @@ class Nivel:
         
         self.trampa=Trampa(trampa_espinas[0],"visible",self.pantalla, (ANCHO-210), ALTO/2+400)
         self.lista_items_curacion.append(Item(100,corazones_vida_chicos,self.pantalla,(1000),(ALTO/2-50)))
-        self.lista_enemigos.append(self.personaje_enemigo)
         self.sonido_daño = pygame.mixer.Sound("C:/Users/botta/Documents/pyton/pygame/sources/sonidos/damage.mp3")
         self.sonido_puntos= pygame.mixer.Sound("C:/Users/botta/Documents/pyton/pygame/sources/sonidos/coin.mp3")
         self.sonido_daño.set_volume(volumen_global)
         self.sonido_puntos.set_volume(volumen_global)
-    def spawnear_enemigos(self,personaje_enemigo):
+    
+    def spawnear_enemigos(self):
         self.lugar_spawn_enemigos==("derecha")
     
         if self.contador_enemigos_derrotados%10 == 0 and  self.contador_enemigos_derrotados!=0:
@@ -85,23 +88,23 @@ class Nivel:
         if self.enemigos_restantes >0:
             for i in range(self.enemigos_restantes):
                 if self.lugar_spawn_enemigos =="izquierda":
-                    enemigo = Personaje_Enemigo(vida=personaje_enemigo.vida,
-                                                daño=personaje_enemigo.daño,
-                                        velocidad_x=personaje_enemigo.velocidad_x,
-                                        velocidad_y=personaje_enemigo.velocidad_y,
-                                        potencia_salto=personaje_enemigo.potencia_salto,
-                                        imagen=personaje_enemigo.imagen,
-                                        limit_velocidad_caida=personaje_enemigo.limit_velocidad_caida,
-                                        x=0,
+                    enemigo = Personaje_Enemigo(vida=self.personaje_enemigo.vida,
+                                                daño=self.personaje_enemigo.daño,
+                                        velocidad_x=self.personaje_enemigo.velocidad_x,
+                                        velocidad_y=self.personaje_enemigo.velocidad_y,
+                                        potencia_salto=self.personaje_enemigo.potencia_salto,
+                                        imagen=self.personaje_enemigo.imagen,
+                                        limit_velocidad_caida=self.personaje_enemigo.limit_velocidad_caida,
+                                        x=10,
                                         y=761)
                 else:
-                    enemigo = Personaje_Enemigo(vida=personaje_enemigo.vida
-                                                ,daño=personaje_enemigo.daño,
-                                        velocidad_x=personaje_enemigo.velocidad_x,
-                                        velocidad_y=personaje_enemigo.velocidad_y,
-                                        potencia_salto=personaje_enemigo.potencia_salto,
-                                        imagen=personaje_enemigo.imagen,
-                                        limit_velocidad_caida=personaje_enemigo.limit_velocidad_caida,
+                    enemigo = Personaje_Enemigo(vida=self.personaje_enemigo.vida
+                                                ,daño=self.personaje_enemigo.daño,
+                                        velocidad_x=self.personaje_enemigo.velocidad_x,
+                                        velocidad_y=self.personaje_enemigo.velocidad_y,
+                                        potencia_salto=self.personaje_enemigo.potencia_salto,
+                                        imagen=self.personaje_enemigo.imagen,
+                                        limit_velocidad_caida=self.personaje_enemigo.limit_velocidad_caida,
                                         x=1900,
                                         y=761)
                 for lado in enemigo.rectangulo:
@@ -119,7 +122,8 @@ class Nivel:
             self.enemigos_restantes=0
 
     def actualizar(self,que_hace,mouse_pos):
-
+    
+        #self.pantalla.blit(texto_puntuacion, (10, 10))
         if self.paused:
             self.pantalla.blit(self.fondo, (0, 0))
             self.form_pausa.draw_if_active(self.pantalla)  
@@ -144,7 +148,7 @@ class Nivel:
                 recompensa.draw(self.pantalla)
                 recompensa.sumar_puntaje_personaje(self.personaje_principal,self.sonido_puntos)
             if self.contador_enemigos_derrotados<50:
-                self.spawnear_enemigos(self.personaje_enemigo)
+                self.spawnear_enemigos()
 
             self.projectil.disparar_projectil(self.pantalla,self.personaje_principal,self.lista_enemigos,projectil_agua,self)
             
@@ -153,16 +157,26 @@ class Nivel:
                 curacion.draw(self.pantalla)
                 curacion.sumar_vida_personaje(self.personaje_principal)
             self.trampa.draw(self.pantalla)
-
             self.form_set_pausa.draw_if_active(self.pantalla)
 
             if self.form_set_pausa.clicked(mouse_pos):
                     self.form_set_pausa.set_active(False)
                     self.form_pausa.set_active(True)
                     self.paused=True
+        font = pygame.font.Font(None, 36)
+        texto_puntuacion = font.render("Puntuación: " + str(self.personaje_principal._Item__score), True, WHITE)
+        texto_rect = texto_puntuacion.get_rect(center=(ANCHO // 2, ALTO-ALTO+10))
 
-            if self.personaje_principal.vida<=0:
-                return "perdio"
-            if self.contador_enemigos_derrotados>50:
-                return 1
+        self.pantalla.blit(texto_puntuacion, texto_rect)    
+        print(self.contador_enemigos_derrotados)
+        if self.contador_enemigos_derrotados>49:
+            return {'nivel_terminado':1,
+                    'puntuacion':self.personaje_principal._Item__score+self.contador_enemigos_derrotados*10
+                    }
+        elif self.personaje_principal.vida<=0:
+            return {'nivel_terminado':"perdio",
+                    'puntuacion':0
+                    }
+        else:
+            return {}
             

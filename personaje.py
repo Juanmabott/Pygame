@@ -41,10 +41,10 @@ class Personaje(Objeto_juego):
             self.actualizar_rectangulos()
             
         elif self.rectangulo['top'].colliderect(plataforma['bottom']):
-            
             retorno= 1
-            self.rectangulo['main'].top = plataforma['main'].bottom+10 
+            self.rectangulo['main'].top = plataforma['main'].bottom
             self.actualizar_rectangulos()
+            self.velocidad_y = 0
             
         elif self.rectangulo['main'].colliderect(plataforma['left']):
             retorno= 2

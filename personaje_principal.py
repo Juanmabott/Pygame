@@ -8,7 +8,7 @@ class Personaje_principal(Personaje):
         self.gravedad= gravedad
         self.estasaltando=True
         self.herido=False
-        self.vida=100
+        self.vida=300
         self.invencibilidad = 5
     def verificar_colision_enemigo(self, lista_de_enemigos,sonido_daño):
         for enemigo in lista_de_enemigos:
@@ -33,14 +33,22 @@ class Personaje_principal(Personaje):
             case "izquierda":
                 if not self.estasaltando:
                     self.animar_movimientos(pantalla,lista_animaciones[3])
-                self.mover(self.velocidad_x * -1,"x")#decrementa en mover_pers
+                self.mover(self.velocidad_x * -1,"x")
 
             case "salta":
-                if not self.estasaltando : # para que solo salta una vez en la misma gravedad
+                if not self.estasaltando and self.verificar_colision!= 1:
                     self.estasaltando = True
                     self.saltar()
-                    
-                    
+            case "quieto_izquierda":
+                if self.herido:
+                    for i in range(20):
+                        self.animar_movimientos(pantalla,lista_animaciones[5])
+                    self.herido=False
+                if self.invencibilidad>0:
+                    self.animar_movimientos(pantalla,lista_animaciones[4])
+                elif not self.estasaltando:
+                    self.animar_movimientos(pantalla, lista_animaciones[6])     
+
             case "quieto":
                 if self.herido:
                     for i in range(20):
@@ -49,16 +57,20 @@ class Personaje_principal(Personaje):
                 if self.invencibilidad>0:
                     self.animar_movimientos(pantalla,lista_animaciones[4])
                 elif not self.estasaltando:
-                    
                     self.animar_movimientos(pantalla, lista_animaciones[0])
+
         colision_con_plataforma = False  # Variable de bandera para controlar la colisión con alguna plataforma
             
         for plataforma in lista_plataformas:
-            if  self.verificar_colision(plataforma.rectangulo):
+            if self.verificar_colision(plataforma.rectangulo)==True:
                 self.estasaltando = False
                 self.en_contacto_con_plataforma = True
                 colision_con_plataforma = True  # Se ha detectado una colisión con alguna plataform
-        if not colision_con_plataforma:
+            elif self.verificar_colision(plataforma.rectangulo)==1:
+                self.aplicar_gravedad(self.gravedad)
+                self.animar_movimientos(pantalla,lista_animaciones[2])
+                self.estasaltando = True
+        if not colision_con_plataforma :
             self.aplicar_gravedad(self.gravedad)
             self.animar_movimientos(pantalla,lista_animaciones[2])
             self.estasaltando = True

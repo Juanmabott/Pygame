@@ -9,6 +9,7 @@ class Personaje_Enemigo(Personaje):
         self.daño=daño
         self.vida=vida
         self.estado="vivo"
+
     def mover_enemigo(self,pantalla,lista_plataformas,lista_items,lista_animaciones):
         if self.vida<=0:
             self.estado="muerto"

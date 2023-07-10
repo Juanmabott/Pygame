@@ -89,6 +89,7 @@ personaje_rayo_camina = [pygame.image.load("C:/Users/botta/Documents/pyton/pygam
                     pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago rayo/corriendo/4.png")]
 
 
+
 personaje_rayo_camina_izquierda = girar_imagenes(personaje_rayo_camina, True, False)
 
 personaje_rayo_salta = [pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago rayo/salta/0.png"),
@@ -96,6 +97,36 @@ personaje_rayo_salta = [pygame.image.load("C:/Users/botta/Documents/pyton/pygame
                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago rayo/salta/2.png"),
                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago rayo/salta/2.png"),
                    ]
+#personaje 3 
+
+personaje_fuego_quieto= [pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago fuego/quieto/0.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago fuego/quieto/1.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago fuego/quieto/2.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago fuego/quieto/3.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago fuego/quieto/4.png"),]
+
+personaje_fuego_camina = [pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago fuego/corriendo/0.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago fuego/corriendo/1.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago fuego/corriendo/2.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago fuego/corriendo/3.png"),
+                    pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago fuego/corriendo/4.png")]
+
+personaje_fuego_camina_izquierda = girar_imagenes(personaje_fuego_camina, True, False)
+
+personaje_fuego_salta = [pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/mago fuego/salta/0.png")]
+
+personaje_quieto_izq=girar_imagenes(personaje_quieto,True,False)
+personaje_rayo_quieto_izq=girar_imagenes(personaje_rayo_quieto,True,False)
+personaje_fuego_quieto_izq=girar_imagenes(personaje_fuego_quieto,True,False)
+
+
+
+lista_animaciones_fuego= [personaje_fuego_quieto, 
+                            personaje_fuego_camina, 
+                            personaje_fuego_salta, 
+                            personaje_fuego_camina_izquierda,
+                            personaje_invencible,
+                            personaje_herido,personaje_fuego_quieto_izq]
 
 corazones_vida=pygame.image.load("pygame/sources/items/manzana.png")
 
@@ -109,8 +140,14 @@ projectil_agua=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources
 
 projectil_rayo=[pygame.image.load("pygame/sources/magos/mago rayo/projectil/0.png"),
                 pygame.image.load("pygame/sources/magos/mago rayo/projectil/1.png"),
-                pygame.image.load("pygame/sources/magos/mago rayo/projectil/2.png"),
-]
+                pygame.image.load("pygame/sources/magos/mago rayo/projectil/2.png"),]
+
+projectil_fuego=[pygame.image.load("pygame/sources/magos/mago fuego/projectil/0.png"),
+                pygame.image.load("pygame/sources/magos/mago fuego/projectil/1.png"),
+                pygame.image.load("pygame/sources/magos/mago fuego/projectil/2.png")]
+
+projectil_roca=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/magos/enemigo tres/projectil/rock_round.png")]
+projectil_roca=reescalar_imagenes(projectil_roca,200,200)
 
 corazones=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/items/0.png"),
            pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/items/1.png"),
@@ -129,7 +166,10 @@ nivel_2_plataforma_normal=[pygame.image.load("C:/Users/botta/Documents/pyton/pyg
 nivel_2_plataforma=reescalar_imagenes(nivel_2_plataforma_normal,1900,100)
 
 nivel_2_plataforma_normal=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/escenario/plataformas/twilight-tiles.png")]
+
 corazones=reescalar_imagenes(corazones,150,50)
+
+trampa_espinas=girar_imagenes(trampa_espinas,False,True)
 
 trampa_espinas=reescalar_imagenes(trampa_espinas,200,50)
 
@@ -142,14 +182,14 @@ lista_animaciones = [personaje_quieto,
                         personaje_salta, 
                         personaje_camina_izquierda,
                         personaje_invencible,
-                        personaje_herido]
+                        personaje_herido,personaje_quieto_izq]
 
 lista_animaciones_rayo = [personaje_rayo_quieto, 
                             personaje_rayo_camina, 
                             personaje_rayo_salta, 
                             personaje_rayo_camina_izquierda,
                             personaje_invencible,
-                            personaje_herido]
+                            personaje_herido,personaje_rayo_quieto_izq]
 
 #sonidos--------------------------------------------------------------------------------------------------------------------------------
 

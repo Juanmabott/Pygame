@@ -16,3 +16,5 @@ pos_actual_x = 0
 velocidad_x = 10
 velocidad_y = 0
 
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)

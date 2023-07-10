@@ -1,60 +1,20 @@
-from nivel import *
-from formulario import *
-from nivel2 import *
-from nivel3 import *
-import warnings
+from menu_funciones import *
 
 warnings.simplefilter("ignore", category=Warning, append=True)
 
-#warnings.filterwarnings("ignore", category=UserWarning, message="libpng warning: iCCP: known incorrect sRGB profile")
+#warnings.filterwarnings("ignore", category=UserWarning, message="libjpg warning: iCCP: known incorrect sRGB profile")
+menu_principal=Menu()
 
-
-pygame.init()
-pygame.mixer.init()
-pygame.mixer.music.load("C:/Users/botta/Documents/pyton/pygame/sources/sonidos/tema_principal.mp3")
-
-window_width = 800
-window_height = 600
-
-
-
-window = pygame.display.set_mode((window_width, window_height))
-verde_oscuro = (0, 100, 0)
-imagen_verde = pygame.Surface((1, 1))
-imagen_verde.fill(verde_oscuro)
-window.blit(imagen_verde, (0, 0))
-
+print(menu_principal.nombre_jugador)
 RELOJ =pygame.time.Clock()
 
-form1 = Form("jugar",window, 300 , window_height // 2 - 75, 200, 50, (165, 42, 42), (0, 0, 255), active=True,imagen = "C:/Users/botta/Documents/pyton/pygame/sources/menu/letras blancas/menu principal/jugar.png")
-form2 = Form("opciones",window, 300 , window_height // 2, 200, 50, (165, 42, 42), (255, 0, 0), active=True,imagen = "C:/Users/botta/Documents/pyton/pygame/sources/menu/letras blancas/menu principal/opciones.png")
-form3 = Form("salir",window, 300, window_height // 2 + 75, 200, 50, (165, 42, 42), (0, 255, 0), active=True,imagen = "C:/Users/botta/Documents/pyton/pygame/sources/menu/letras blancas/menu principal/salir.png")
-
-formularios_menu= [form1, form2, form3]
-
-form_level1 = Form("nivel1",window, 400, window_height // 2 - 75, 200, 50, (165, 42, 42), (0, 0, 255),active=False,imagen = "pygame/sources/menu/letras blancas/numeros/1.png")
-form_level2 = Form("nivel2",window, 400, window_height // 2, 200, 50, (165, 42, 42), (255, 0, 0), active=False,imagen = "pygame/sources/menu/letras blancas/numeros/2.png")
-form_level3 = Form("nivel3",window, 400, window_height // 2 + 75, 200, 50, (165, 42, 42), (0, 255, 0), active=False,imagen = "pygame/sources/menu/letras blancas/numeros/3.png")
-
-form_seleccion_level=[form_level1, form_level2, form_level3]
-
-form_volumen_mas = Form("subirVolumen",window, 400, window_height // 2 - 75, 200, 50, (165, 42, 42), (0, 0, 255),active=False,imagen ="pygame/sources/menu/letras blancas/menu principal/subirVolumen.png")
-form_volumen_menos = Form("bajarVolumen",window, 400, window_height // 2, 200, 50, (165, 42, 42), (255, 0, 0), active=False,imagen = "pygame/sources/menu/letras blancas/menu principal/bajarVolumen.png")
-form_volumen_switch = Form("cambiarVolumen",window, 400, window_height // 2 + 75, 200, 50, (165, 42, 42), (0, 255, 0), active=False,imagen = "pygame/sources/menu/letras blancas/menu principal/alternarVolumen.png")
-form_volumen_salir = Form("salirVolumen",window, 400, window_height // 2 + 175, 200, 50, (165, 42, 42), (0, 255, 0), active=False,imagen = "pygame/sources/menu/letras blancas/menu principal/salir.png")
-
-form_volumen_opciones=[form_volumen_mas,form_volumen_menos,form_volumen_switch,form_volumen_salir]
-
-
 piso = pygame.Rect(0,ALTO/2+400, ANCHO, 20)
-window_width = 800
-window_height = 600
-window = pygame.display.set_mode((window_width, window_height))
+
 pygame.display.set_caption("Spell Casters")
 run=True
 
 
-nivel_iniciado=False
+menu_principal.nivel_iniciado=False
 bandera=False
 bandera_opciones=False
 
@@ -63,16 +23,14 @@ bandera_menu=True
 
 volumen_global=0.5
 niveles_terminados=[0,0,0]
-
+mira="derecha"
 perdio=False
-
+puntaje_total=0
 while run:
-
 
     RELOJ.tick(FPS)
     lista_eventos = pygame.event.get()
     mouse_pos = pygame.mouse.get_pos()
-    print(mouse_pos)
     for event in lista_eventos:
         if event.type == pygame.QUIT:
             run = False
@@ -84,12 +42,14 @@ while run:
                 cambiar_modo()
     
 
-    if not nivel_iniciado:  
+    if not menu_principal.nivel_iniciado:  
+        
         pygame.mixer.music.set_volume(volumen_global)
         pygame.mixer.music.play(loops=-1)
 
-        for form in formularios_menu:
+        for form in menu_principal.formularios_menu:
             if bandera_menu:
+                fondo=menu_principal.fondo
                 if form.clicked(mouse_pos):
                     match(form.nombre):
                         case "jugar" :
@@ -104,11 +64,24 @@ while run:
                         case "salir": 
                             if form.is_active():
                                 run=False
+                        case "historia":
+                            bandera_jugar=False
+                            bandera_menu=False
+                            fondo=pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/menu/letras blancas/menu principal/historia.jpg")
+                            menu_principal.form5[0].set_active(True)
+                            menu_principal.window.blit(fondo, (0, 0))
                 form.set_active(True)
             else:
+                if menu_principal.form5[0].clicked(mouse_pos) and menu_principal.form5[0].is_active():
+                    menu_principal.form5[0].set_active(False)
+                    bandera_menu=True
+                    fondo=menu_principal.fondo
+                menu_principal.window.blit(fondo, (0, 0))
                 form.set_active(False)
+                
             
-            for formula in form_seleccion_level:
+            
+            for formula in menu_principal.form_seleccion_level:
                 if bandera_jugar:
                     if formula.clicked(mouse_pos):
                         match(formula.nombre):
@@ -117,26 +90,26 @@ while run:
                                     if niveles_terminados==[0,0,0]:
                                         bandera_menu=False
                                         bandera_jugar=False
-                                        nivel_iniciado=True
+                                        menu_principal.nivel_iniciado=True
                                         nivel_seleccionado=1
                             case "nivel2" :
-                                    if niveles_terminados==[1,0,0]:
+                                    if niveles_terminados==[0,0,0]:
                                         bandera_menu=False
                                         bandera_jugar=False
-                                        nivel_iniciado=True
+                                        menu_principal.nivel_iniciado=True
                                         nivel_seleccionado=2
                             case "nivel3" :
-                                    if niveles_terminados==[1,1,0]:
+                                    if niveles_terminados==[0,0,0]:
                                         bandera_menu=False
                                         bandera_jugar=False
-                                        nivel_iniciado=True
+                                        menu_principal.nivel_iniciado=True
                                         nivel_seleccionado=3
                     formula.set_active(True)
                 else:
                     formula.set_active(False)
 
             
-            for ajustes in form_volumen_opciones:
+            for ajustes in menu_principal.form_volumen_opciones: 
                 if bandera_opciones and not bandera_menu:
                     if ajustes.clicked(mouse_pos):
                         if ajustes.nombre=="subirVolumen":
@@ -154,32 +127,34 @@ while run:
                         elif ajustes.nombre=="salirVolumen":
                             bandera_opciones=False
                             bandera_menu=True
-                    ajustes
                     ajustes.set_active(True)
                 else:
                     ajustes.set_active(False)
                 
                     #form.set_active(True)
-                    #nivel_iniciado = True 
+                    #menu_principal.nivel_iniciado = True  
 
-    pygame.draw.rect(window, (0,0,0), (0, 0, window_width, window_height))
-    for form in [form1, form2, form3, form_level1, form_level2, form_level3]+ form_volumen_opciones:
-        form.draw_if_active(window)
-        
-            
-
-    if nivel_iniciado:
+    #pygame.draw.rect(window, (0,0,0), (0, 0, window_width, window_height))
+    for form in menu_principal.formularios_menu+menu_principal.form_seleccion_level+ menu_principal.form_volumen_opciones+menu_principal.form5:
+        form.draw_if_active(menu_principal.window)
+    
+    if menu_principal.nivel_iniciado:
         keys=pygame.key.get_pressed()
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
                 que_hace = "derecha"
+                mira="dercha"
         elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
             que_hace = "izquierda"
+            mira="izquierda"
         elif keys[pygame.K_SPACE]:
             que_hace = "salta"
+            
+        elif mira=="izquierda":
+            que_hace= "quieto_izquierda"
         else:
             que_hace = "quieto"
 
-    if (nivel_iniciado and not bandera):
+    if (menu_principal.nivel_iniciado and not bandera):
         match nivel_seleccionado:
             case 1:
                 nivel=Nivel(volumen_global)
@@ -192,8 +167,8 @@ while run:
                 bandera=True
             
     if perdio:
-        window = pygame.display.set_mode((window_width, window_height))
-        nivel_iniciado=False
+        window = pygame.display.set_mode((menu_principal.window_width, menu_principal.window_height))
+        menu_principal.nivel_iniciado=False
         bandera=False
         bandera_opciones=False
 
@@ -203,26 +178,29 @@ while run:
         volumen_global=0.5
 
         perdio=False
-        print("perdio")
-
+        
     elif bandera:
         niveles=nivel.actualizar(que_hace,mouse_pos)
-        print(nivel.contador_enemigos_derrotados)
-        match niveles:
-            case 1:
-                niveles_terminados=[1,0,0]
-                nivel_seleccionado=2
-                bandera=False
-            case 2:
-                niveles_terminados=[1,1,0]
-                nivel_seleccionado=3
-                bandera=False
-            case 3:
-                niveles_terminados=[1,1,1]
-                bandera=False
-                run=False
-            case "perdio":
-                perdio=True
+        if 'nivel_terminado' in niveles:
+            nivel_terminado = niveles['nivel_terminado']
+            if nivel_terminado == 1:
+                niveles_terminados = [1, 0, 0]
+                nivel_seleccionado = 2
+                bandera = False
+                puntaje_total+=niveles['puntuacion']
+            elif nivel_terminado == 2:
+                niveles_terminados = [1, 1, 0]
+                nivel_seleccionado = 3
+                bandera = False
+                puntaje_total+=niveles['puntuacion']
+                
+            elif nivel_terminado == 3:
+                niveles_terminados = [1, 1, 1]
+                bandera = False
+                run = False
+                puntaje_total+=niveles['puntuacion']
+            elif nivel_terminado == "perdio":
+                perdio = True
 
         if event.type == MOUSEBUTTONDOWN:
             if event.button == 1:
