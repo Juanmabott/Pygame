@@ -17,7 +17,7 @@ run=True
 menu_principal.nivel_iniciado=False
 bandera=False
 bandera_opciones=False
-
+ 
 bandera_jugar=False
 bandera_menu=True
 
@@ -197,7 +197,8 @@ while run:
             elif nivel_terminado == 3:
                 niveles_terminados = [1, 1, 1]
                 bandera = False
-                run = False
+                bandera_menu=True
+                menu_principal.nivel_iniciado=False
                 puntaje_total+=niveles['puntuacion']
             elif nivel_terminado == "perdio":
                 perdio = True

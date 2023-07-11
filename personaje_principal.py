@@ -8,6 +8,7 @@ class Personaje_principal(Personaje):
         self.gravedad= gravedad
         self.estasaltando=True
         self.herido=False
+        self.vida_inicial=300
         self.vida=300
         self.invencibilidad = 5
     def verificar_colision_enemigo(self, lista_de_enemigos,sonido_daño):

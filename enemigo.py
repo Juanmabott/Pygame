@@ -10,7 +10,7 @@ class Personaje_Enemigo(Personaje):
         self.vida=vida
         self.estado="vivo"
 
-    def mover_enemigo(self,pantalla,lista_plataformas,lista_items,lista_animaciones):
+    def mover_enemigo(self,pantalla,lista_plataformas,lista_items,lista_animaciones,drop):
         if self.vida<=0:
             self.estado="muerto"
 
@@ -43,8 +43,8 @@ class Personaje_Enemigo(Personaje):
                 self.girando = False
             self.animar_movimientos(pantalla,lista_animaciones)
         elif self.rectangulo["main"].y < 10000:
-            puntos = Item(100,estrella,pantalla,self.rectangulo["main"].x,self.rectangulo["main"].y)
-            lista_items.append(puntos)
+            #puntos = Item(100,estrella,pantalla,self.rectangulo["main"].x,self.rectangulo["main"].y)
+            lista_items.append(drop)
             bandera=True
             self.mover(10000,"y")
         else:

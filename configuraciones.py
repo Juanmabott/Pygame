@@ -155,9 +155,10 @@ corazones=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/item
 
 estrella=reescalar_imagenes(pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/items/star.png"),50,50)
 
+piso_jungla=[pygame.image.load("pygame/sources/escenario/plataformas/Tile_2.png")]
 
 piso_tierra=reescalar_imagenes(plataforma_tierra,ANCHO-200,100)
-
+piso_jungla=reescalar_imagenes(piso_jungla,ANCHO,100)
 columna=[pygame.image.load("pygame/sources/escenario/plataformas/columna.png")]
 columna=reescalar_imagenes(columna,200,400)
 
@@ -175,6 +176,9 @@ trampa_espinas=reescalar_imagenes(trampa_espinas,200,50)
 
 trampa_espinas=girar_imagenes(trampa_espinas,False,True)
 
+
+arbol_jungla=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/escenario/plataformas/palmtree.png")]
+arbol_jungla=reescalar_imagenes(arbol_jungla,200,400)
 corazones_vida_chicos=reescalar_imagenes(corazones_vida,50,50)
 #girar_imagenes(enemigo_camina_lvl2,True,False)
 lista_animaciones = [personaje_quieto, 
@@ -182,7 +186,8 @@ lista_animaciones = [personaje_quieto,
                         personaje_salta, 
                         personaje_camina_izquierda,
                         personaje_invencible,
-                        personaje_herido,personaje_quieto_izq]
+                        personaje_herido,
+                        personaje_quieto_izq]
 
 lista_animaciones_rayo = [personaje_rayo_quieto, 
                             personaje_rayo_camina, 
@@ -190,6 +195,12 @@ lista_animaciones_rayo = [personaje_rayo_quieto,
                             personaje_rayo_camina_izquierda,
                             personaje_invencible,
                             personaje_herido,personaje_rayo_quieto_izq]
+
+tomo_agua=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/escenario/libros/tomo azul.png")]
+tomo_rayo=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/escenario/libros/tomo negro.png")]
+tomo_fuego=[pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/escenario/libros/tomo rojo.png")]
+
+
 
 #sonidos--------------------------------------------------------------------------------------------------------------------------------
 

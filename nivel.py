@@ -56,7 +56,7 @@ class Nivel:
                                         x_inicial,
                                         y_inicial)
         
-        self.personaje_enemigo=Personaje_Enemigo(100,50,10,
+        self.personaje_enemigo=Personaje_Enemigo(100,100,10,
                                         0,
                                         60,
                                         enemigo_camina,
@@ -141,7 +141,7 @@ class Nivel:
             self.personaje_principal.verificar_colision_enemigo(self.lista_enemigos,self.sonido_daño)
             self.trampa.daniar_jugador(self.personaje_principal)  
             for enemigo in self.lista_enemigos:
-                enemigo.mover_enemigo(self.pantalla,self.lista_plataforma,self.lista_items_puntos,enemigo_camina)
+                enemigo.mover_enemigo(self.pantalla,self.lista_plataforma,self.lista_items_puntos,enemigo_camina,Item(100,estrella,self.pantalla,enemigo.rectangulo["main"].x,enemigo.rectangulo["main"].y))
             for plataforma in self.plataformas:
                 plataforma.draw(self.pantalla)
             for recompensa in self.lista_items_puntos:
@@ -150,9 +150,9 @@ class Nivel:
             if self.contador_enemigos_derrotados<50:
                 self.spawnear_enemigos()
 
-            self.projectil.disparar_projectil(self.pantalla,self.personaje_principal,self.lista_enemigos,projectil_agua,self)
+            self.projectil.disparar_projectil(self.pantalla,self.personaje_principal,self.lista_enemigos,projectil_agua,self,que_hace)
             
-            self.barra_vida.animar_vida(corazones,self.pantalla,self.personaje_principal.vida)
+            self.barra_vida.animar_vida(corazones,self.pantalla,self.personaje_principal.vida_inicial,self.personaje_principal.vida)
             for curacion in self.lista_items_curacion:
                 curacion.draw(self.pantalla)
                 curacion.sumar_vida_personaje(self.personaje_principal)

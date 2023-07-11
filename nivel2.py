@@ -144,7 +144,12 @@ class NivelDos:
             #self.trampa.daniar_jugador(self.personaje_principal)  
 
             for enemigo in self.lista_enemigos:
-                enemigo.mover_enemigo(self.pantalla,self.lista_plataforma,self.lista_items_puntos,enemigo_camina_lvl2)
+                
+                if self.personaje_principal.rectangulo["main"].y>= enemigo.rectangulo["main"].y:
+                    enemigo.velocidad_x=enemigo.velocidad_x*1.2
+                else:
+                    enemigo.velocidad_x=enemigo.velocidad_x/1.2
+                enemigo.mover_enemigo(self.pantalla,self.lista_plataforma,self.lista_items_puntos,enemigo_camina_lvl2,Objeto_juego(tomo_rayo,enemigo.rectangulo["main"].x,enemigo.rectangulo["main"].y))
 
             self.projectil_enemigo.disparar_projectil_enemigo(self.pantalla,self.personaje_principal,self.lista_enemigos[0],projectil_roca,self)
             
@@ -153,10 +158,14 @@ class NivelDos:
 
             for recompensa in self.lista_items_puntos:
                 recompensa.draw(self.pantalla)
-                recompensa.sumar_puntaje_personaje(self.personaje_principal,self.sonido_puntos)
+                if self.personaje_principal.rectangulo["main"].colliderect(recompensa.rectangulo["main"]) and not isinstance(recompensa, Item ):
+                        print("ganaste")
+                        return {'nivel_terminado':2,
+                        'puntuacion':self.personaje_principal._Item__score+self.contador_enemigos_derrotados*10
+                        }
 
             self.projectil.disparar_projectil(self.pantalla,self.personaje_principal,self.lista_enemigos,projectil_rayo,self,que_hace)
-            self.barra_vida.animar_vida(corazones,self.pantalla,self.personaje_principal.vida)
+            self.barra_vida.animar_vida(corazones,self.pantalla,self.personaje_principal.vida_inicial,self.personaje_principal.vida)
             for curacion in self.lista_items_curacion:
                 curacion.draw(self.pantalla)
                 curacion.sumar_vida_personaje(self.personaje_principal)
@@ -177,11 +186,8 @@ class NivelDos:
 
         self.pantalla.blit(texto_puntuacion, texto_rect)    
 
-        if self.contador_enemigos_derrotados>1:
-            return {'nivel_terminado':2,
-                    'puntuacion':self.personaje_principal._Item__score+self.contador_enemigos_derrotados*10
-                    }
-        elif self.personaje_principal.vida<=0:
+
+        if self.personaje_principal.vida<=0:
             return {'nivel_terminado':"perdio",
                     'puntuacion':0
                     }
