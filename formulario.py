@@ -19,12 +19,15 @@ class Form():
         self.slave_rect.x = x
         self.slave_rect.y = y
         self.active = active
-        self.imagen= imagen
+        self.imagen= pygame.image.load(imagen)
         self.x = x
         self.y = y
 
-        if(self.color_background != None):
+        if self.color_background==None:
+            self.surface.set_colorkey(None)
+        else:
             self.surface.fill(self.color_background)
+        
 
     def set_active(self, activo):
         self.active = activo
@@ -36,11 +39,16 @@ class Form():
     def set_visible(self, visible):
         self.visible = visible
     def draw(self):
-        self.surface.fill(self.color_background)
+
+        if self.color_background==None:
+            self.surface.set_colorkey(None)
+        else:
+            self.surface.fill(self.color_background)
+
         if self.imagen:
-            background_img = pygame.image.load(self.imagen)
-            self.surface.blit(background_img, (50, 0))
-        pygame.draw.rect(self.surface, self.color_border, self.slave_rect, 3)
+            background_img = self.imagen
+            self.surface.blit(background_img, (0, 0))
+        #pygame.draw.rect(self.surface, self.color_border, self.slave_rect, 3)
 
     def clicked (self,mouse_pos):
         if self.slave_rect.collidepoint(mouse_pos):
@@ -49,7 +57,6 @@ class Form():
 
     def draw_if_active(self,pantalla):
         if self.is_active():
-            pygame.draw.rect(pantalla, self.color_border, self.slave_rect, 3)
             self.draw()    
             pantalla.blit(self.surface, (self.x, self.y))
 
@@ -80,7 +87,7 @@ class Form():
                         else:
                             nombre_jugador+=event.unicode
                 
-                window.blit(pygame.image.load(self.imagen), (0,0))
+                window.blit(self.imagen, (0,0))
                 titulo=font.render("Spell Casters",True,(255,0,0))
                 window.blit(titulo, (self.w//2-titulo.get_width()//2, 0))
 

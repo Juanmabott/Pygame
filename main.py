@@ -2,10 +2,11 @@ from menu_funciones import *
 
 warnings.simplefilter("ignore", category=Warning, append=True)
 
-#warnings.filterwarnings("ignore", category=UserWarning, message="libjpg warning: iCCP: known incorrect sRGB profile")
+warnings.filterwarnings("ignore", category=UserWarning, message="libpng warning: iCCP: known incorrect sRGB profile")
+warnings.filterwarnings("ignore", category=RuntimeWarning, message="libpng warning: .*")
+warnings.filterwarnings("ignore", category=RuntimeWarning, message="libpng warning: iCCP: cHRM chunk does not match sRGB")
 menu_principal=Menu()
 
-print(menu_principal.nombre_jugador)
 RELOJ =pygame.time.Clock()
 
 piso = pygame.Rect(0,ALTO/2+400, ANCHO, 20)
@@ -17,16 +18,46 @@ run=True
 menu_principal.nivel_iniciado=False
 bandera=False
 bandera_opciones=False
- 
+
 bandera_jugar=False
 bandera_menu=True
+data=[]
+try:
+    with open("saveGame","r") as file:
+        encontrado=False
+        lines = file.readlines()
+        for i in range(len(lines)):
+            if lines[i].startswith(menu_principal.nombre_jugador):
+                datos=lines[i].split(",")
+                puntaje_total=int(datos[1])
+                encontrado=True
+                niveles_terminados=[int(data.strip()) for data in datos[2:]]
+                datos_jugador={"nombre":datos[0],"puntuacion":datos[1]}
+                data.append(datos_jugador)
+            else:
+                datos=lines[i].split(",")
+                datos_jugador={"nombre":datos[0],"puntuacion":datos[1]}
+                data.append(datos_jugador)
+        if not encontrado:
+            niveles_terminados=[0,0,0]
+            puntaje_total=0
+            datos_jugador={"nombre":menu_principal.nombre_jugador,"puntuacion":puntaje_total}  
+            data.append(datos_jugador)    
+except FileNotFoundError:
+    with open("saveGame","w") as file:
+        niveles_terminados=[0,0,0]
+        puntaje_total=0
+        datos_jugador={"nombre":menu_principal.nombre_jugador,"puntuacion":puntaje_total}  
+        data.append(datos_jugador) 
 
 volumen_global=0.5
-niveles_terminados=[0,0,0]
+bandera_puntuacion=False
 mira="derecha"
 perdio=False
-puntaje_total=0
+
+
 while run:
+    posicion_y = 100
 
     RELOJ.tick(FPS)
     lista_eventos = pygame.event.get()
@@ -43,7 +74,6 @@ while run:
     
 
     if not menu_principal.nivel_iniciado:  
-        
         pygame.mixer.music.set_volume(volumen_global)
         pygame.mixer.music.play(loops=-1)
 
@@ -70,6 +100,11 @@ while run:
                             fondo=pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/menu/letras blancas/menu principal/historia.jpg")
                             menu_principal.form5[0].set_active(True)
                             menu_principal.window.blit(fondo, (0, 0))
+                        case "puntuacion" :
+                            if form.is_active():
+                                bandera_jugar=False
+                                bandera_menu=False
+                                bandera_puntuacion=True
                 form.set_active(True)
             else:
                 if menu_principal.form5[0].clicked(mouse_pos) and menu_principal.form5[0].is_active():
@@ -78,28 +113,31 @@ while run:
                     fondo=menu_principal.fondo
                 menu_principal.window.blit(fondo, (0, 0))
                 form.set_active(False)
-                
-            
             
             for formula in menu_principal.form_seleccion_level:
                 if bandera_jugar:
+                    
+                    menu_principal.salir_menu.set_active(True)
+                    if  menu_principal.salir_menu.clicked(mouse_pos):
+                            menu_principal.salir_menu.set_active(False)
+                            bandera_jugar=False
+                            bandera_menu=True
                     if formula.clicked(mouse_pos):
                         match(formula.nombre):
                             case "nivel1" :
                                 if formula.active:
-                                    if niveles_terminados==[0,0,0]:
                                         bandera_menu=False
                                         bandera_jugar=False
                                         menu_principal.nivel_iniciado=True
                                         nivel_seleccionado=1
                             case "nivel2" :
-                                    if niveles_terminados==[0,0,0]:
+                                    if niveles_terminados!=[0,0,0]:
                                         bandera_menu=False
                                         bandera_jugar=False
                                         menu_principal.nivel_iniciado=True
                                         nivel_seleccionado=2
                             case "nivel3" :
-                                    if niveles_terminados==[0,0,0]:
+                                    if niveles_terminados==[1,1,0] or niveles_terminados==[1,1,1]:
                                         bandera_menu=False
                                         bandera_jugar=False
                                         menu_principal.nivel_iniciado=True
@@ -133,9 +171,32 @@ while run:
                 
                     #form.set_active(True)
                     #menu_principal.nivel_iniciado = True  
+        if bandera_puntuacion:
+            pygame.font.init()
+            font = pygame.font.SysFont("Arial", 32)
+            for jugador in data:
+                nombre = jugador["nombre"]
+                puntuacion = jugador["puntuacion"]
 
+                nombre_texto = font.render(f"Nombre: {nombre}", True, (0, 0, 0))
+                puntuacion_texto = font.render(f"Puntuación: {puntuacion}", True, (0, 0, 0))
+
+                nombre_posicion = (menu_principal.window_width // 2 - nombre_texto.get_width() // 2, posicion_y)
+                puntuacion_posicion = (menu_principal.window_width // 2 - puntuacion_texto.get_width() // 2, posicion_y + 50)
+
+                menu_principal.window.blit(nombre_texto, nombre_posicion)
+                menu_principal.window.blit(puntuacion_texto, puntuacion_posicion)
+                menu_principal.salir_menu.set_active(True)
+                if menu_principal.salir_menu.clicked(mouse_pos):
+                    menu_principal.salir_menu.set_active(False)
+                    bandera_menu=True
+                    menu_principal.window.blit(menu_principal.fondo,(0,0))
+                    bandera_puntuacion=False
+
+                posicion_y += 100
+            pygame.display.flip()
     #pygame.draw.rect(window, (0,0,0), (0, 0, window_width, window_height))
-    for form in menu_principal.formularios_menu+menu_principal.form_seleccion_level+ menu_principal.form_volumen_opciones+menu_principal.form5:
+    for form in menu_principal.formularios_menu+menu_principal.form_seleccion_level+ menu_principal.form_volumen_opciones+menu_principal.form5+[menu_principal.salir_menu]:
         form.draw_if_active(menu_principal.window)
     
     if menu_principal.nivel_iniciado:
@@ -207,4 +268,22 @@ while run:
             if event.button == 1:
                 nivel.projectil.disparo=True 
     
+ 
+
+    with open("saveGame", "r") as file:
+        lines = file.readlines()
+
+        encontrado = False
+        for i in range(len(lines)):
+            if lines[i].startswith(menu_principal.nombre_jugador + ","):
+                lines[i] = menu_principal.nombre_jugador + "," + str(puntaje_total) + "," + ",".join(map(str, niveles_terminados)) + "\n"
+                encontrado = True
+                break
+        if not encontrado:
+            lines.append(menu_principal.nombre_jugador + "," + str(puntaje_total) + "," + ",".join(map(str, niveles_terminados)) + "\n")
+
+    with open("saveGame", "w") as file:
+        file.writelines(lines)
+
     pygame.display.update()
+

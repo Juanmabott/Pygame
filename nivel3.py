@@ -19,10 +19,10 @@ class NivelTres:
         self.lista_items_curacion=[]
         self.lista_plataforma = []
         self.lista_enemigos=[]
-        self.enemigos_restantes = 9
+        self.enemigos_restantes = 5
         self.contador_enemigos_derrotados=0
         self.tamaño_jefe=(100,50)
-        self.lugar_spawn_enemigos="derecha"
+        self.lugar_spawn_enemigos="izquierda"
         self.pantalla= pygame.display.set_mode(TAMAÑO_PANTALA)
         self.barra_vida=Interfaz(corazones[0],10,10,self.pantalla)
         self.paused= False
@@ -55,7 +55,7 @@ class NivelTres:
                                         x_inicial,
                                         y_inicial)
         
-        self.personaje_enemigo=Personaje_Enemigo(1,999,0,
+        self.personaje_enemigo=Personaje_Enemigo(10000,999,0,
                                         0,
                                         60,
                                         self.enemigo_camina_lvl3_tamaño,
@@ -63,29 +63,17 @@ class NivelTres:
                                         1600,
                                         384
                                         )
-        self.personaje_enemigo_secundario=Personaje_Enemigo_Secundario("secuaz",1,999,5,
-                                0,
-                                60,
-                                enemigo_camina_lvl2,
-                                1,
-                                ANCHO/2,
-                                761
-                                )
         
         #self.trampa=Trampa(trampa_espinas[0],"visible",self.pantalla, (ANCHO-210), ALTO/2+400)
         self.lista_items_curacion.append(Item(100,corazones_vida_chicos,self.pantalla,(1000),(ALTO/2-50)))
-        self.lista_enemigos.append(self.personaje_enemigo_secundario)
         self.lista_enemigos.append(self.personaje_enemigo)
         self.sonido_daño = pygame.mixer.Sound("C:/Users/botta/Documents/pyton/pygame/sources/sonidos/damage.mp3")
         self.sonido_puntos= pygame.mixer.Sound("C:/Users/botta/Documents/pyton/pygame/sources/sonidos/coin.mp3")
         self.sonido_daño.set_volume(volumen_global)
         self.sonido_puntos.set_volume(volumen_global)
 
-    def spawnear_enemigos(self,personaje_enemigo):
-        self.lugar_spawn_enemigos==("derecha")
-        print(self.contador_enemigos_derrotados)
-        if self.contador_enemigos_derrotados%10 == 0 and  self.contador_enemigos_derrotados!=0:
-            #print(self.contador_enemigos_derrotados)
+    def spawnear_enemigos(self):
+        if self.contador_enemigos_derrotados%5 == 0 and  self.contador_enemigos_derrotados!=0:
             if self.lugar_spawn_enemigos=="izquierda":
                 self.lugar_spawn_enemigos="derecha"
             else:
@@ -93,39 +81,39 @@ class NivelTres:
             self.contador_enemigos_derrotados+=1
             self.enemigos_restantes=5
             self.lista_enemigos.clear()
+            if self.personaje_enemigo.vida!=2500 and self.personaje_enemigo.vida!=1 and self.personaje_enemigo.vida>0:
+                self.personaje_enemigo.vida-=2500
+            else:
+                self.personaje_enemigo.vida=1
+
+            self.lista_enemigos.append(self.personaje_enemigo)
             
         if self.enemigos_restantes >0:
             for i in range(self.enemigos_restantes):
                 if self.lugar_spawn_enemigos =="izquierda":
-                    enemigo = Personaje_Enemigo_Secundario(nombre=personaje_enemigo.nombre,vida=personaje_enemigo.vida,daño=personaje_enemigo.daño,
-                                        velocidad_x=personaje_enemigo.velocidad_x,
-                                        velocidad_y=personaje_enemigo.velocidad_y,
-                                        potencia_salto=personaje_enemigo.potencia_salto,
-                                        imagen=personaje_enemigo.imagen,
-                                        limit_velocidad_caida=personaje_enemigo.limit_velocidad_caida,
-                                        x=ANCHO/2,
-                                        y=761)
+                    enemigo = Personaje_Enemigo_Secundario("secuaz",1,999,5,
+                                0,
+                                60,
+                                enemigo_camina_lvl2,
+                                1,
+                                ANCHO/2,
+                                761
+                                )
                 else:
-                    enemigo = Personaje_Enemigo_Secundario(nombre=personaje_enemigo.nombre,vida=personaje_enemigo.vida,daño=personaje_enemigo.daño,
-                                        velocidad_x=personaje_enemigo.velocidad_x,
-                                        velocidad_y=personaje_enemigo.velocidad_y,
-                                        potencia_salto=personaje_enemigo.potencia_salto,
-                                        imagen=personaje_enemigo.imagen,
-                                        limit_velocidad_caida=personaje_enemigo.limit_velocidad_caida,
-                                        x=ANCHO/2,
-                                        y=ALTO/2)
+                    enemigo = Personaje_Enemigo_Secundario("secuaz",1,999,5,
+                                0,
+                                60,
+                                enemigo_camina_lvl2,
+                                1,
+                                300,
+                                761
+                                )
                 for lado in enemigo.rectangulo:
-                    if i >0:
+                    if i >1:
                         enemigo.rectangulo[lado].x = self.lista_enemigos[i-1].rectangulo[lado].x
-                        enemigo.velocidad_x=self.lista_enemigos[i-1].velocidad_x*1.05
-                        #enemigo.velocidad_x = self.lista_enemigos[i-1].velocidad_x*1.2
-                    else:
-                        enemigo.rectangulo[lado].x = enemigo.rectangulo[lado].x+50
-                #print("hola")
-                #enemigo.actualizar_rectangulos()
+                        enemigo.velocidad_x=self.lista_enemigos[i-1].velocidad_x*1.5
                 
                 self.lista_enemigos.append(enemigo)
-                #print(len(self.lista_enemigos))
             self.enemigos_restantes=0
 
     def actualizar(self,que_hace,mouse_pos):
@@ -138,10 +126,6 @@ class NivelTres:
                 self.paused=False
         else:
             self.pantalla.blit(self.fondo, (0, 0))
-
-            self.personaje_principal = self.personaje_principal
-
-            self.lista_enemigos = self.lista_enemigos
 
             self.plataformas = self.lista_plataforma
 
@@ -171,7 +155,6 @@ class NivelTres:
                 if not isinstance(recompensa, Item ):
                     recompensa.draw(self.pantalla)
                     if self.personaje_principal.rectangulo["main"].colliderect(recompensa.rectangulo["main"]) and not isinstance(recompensa, Item ):
-                        print("ganaste")
                         return {'nivel_terminado':3,
                         'puntuacion':self.personaje_principal._Item__score+self.contador_enemigos_derrotados*10
                         }
@@ -179,7 +162,7 @@ class NivelTres:
                     recompensa.sumar_puntaje_personaje(self.personaje_principal,self.sonido_puntos)
 
                     recompensa.draw(self.pantalla)
-            self.spawnear_enemigos(self.personaje_enemigo_secundario)
+            self.spawnear_enemigos()
 
             self.projectil.disparar_projectil(self.pantalla,self.personaje_principal,self.lista_enemigos,projectil_fuego,self,que_hace)
             
