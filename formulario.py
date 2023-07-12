@@ -88,7 +88,7 @@ class Form():
                             nombre_jugador+=event.unicode
                 
                 window.blit(self.imagen, (0,0))
-                titulo=font.render("Spell Casters",True,(255,0,0))
+                titulo=font.render("Ingrese su nombre",True,(255,0,0))
                 window.blit(titulo, (self.w//2-titulo.get_width()//2, 0))
 
                 pygame.draw.rect(window,color_fondo_input,input_rect)
