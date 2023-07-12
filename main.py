@@ -50,7 +50,10 @@ except FileNotFoundError:
         datos_jugador={"nombre":menu_principal.nombre_jugador,"puntuacion":puntaje_total}  
         data.append(datos_jugador) 
 
-volumen_global=0.5
+
+
+
+
 bandera_puntuacion=False
 mira="derecha"
 perdio=False
@@ -74,8 +77,8 @@ while run:
     
 
     if not menu_principal.nivel_iniciado:  
-        pygame.mixer.music.set_volume(volumen_global)
-        pygame.mixer.music.play(loops=-1)
+        # pygame.mixer.music.set_volume(menu_principal.volumen_global)
+        # pygame.mixer.music.play(loops=-1)
 
         for form in menu_principal.formularios_menu:
             if bandera_menu:
@@ -151,17 +154,17 @@ while run:
                 if bandera_opciones and not bandera_menu:
                     if ajustes.clicked(mouse_pos):
                         if ajustes.nombre=="subirVolumen":
-                            if volumen_global<=1 and volumen_global>=0:
-                                volumen_global+=0.1
+                            if menu_principal.volumen_global<=1 and menu_principal.volumen_global>=0:
+                                menu_principal.volumen_global+=0.1
                         elif ajustes.nombre=="bajarVolumen":
-                            if volumen_global<=1 and volumen_global>=0:
-                                volumen_global-=0.1
+                            if menu_principal.volumen_global<=1 and menu_principal.volumen_global>=0:
+                                menu_principal.volumen_global-=0.1
                                 
                         elif ajustes.nombre=="cambiarVolumen":
-                            if volumen_global>0:
-                                volumen_global=0
+                            if menu_principal.volumen_global>0:
+                                menu_principal.volumen_global=0
                             else:
-                                volumen_global=1
+                                menu_principal.volumen_global=1
                         elif ajustes.nombre=="salirVolumen":
                             bandera_opciones=False
                             bandera_menu=True
@@ -218,13 +221,13 @@ while run:
     if (menu_principal.nivel_iniciado and not bandera):
         match nivel_seleccionado:
             case 1:
-                nivel=Nivel(volumen_global)
+                nivel=Nivel(menu_principal)
                 bandera=True
             case 2:
-                nivel=NivelDos(volumen_global)
+                nivel=NivelDos(menu_principal)
                 bandera=True
             case 3:
-                nivel=NivelTres(volumen_global)
+                nivel=NivelTres(menu_principal)
                 bandera=True
             
     if perdio:
@@ -236,12 +239,10 @@ while run:
         bandera_jugar=False
         bandera_menu=True
 
-        volumen_global=0.5
-
         perdio=False
         
     elif bandera:
-        niveles=nivel.actualizar(que_hace,mouse_pos)
+        niveles=nivel.actualizar(que_hace,mouse_pos,menu_principal)
         if 'nivel_terminado' in niveles:
             nivel_terminado = niveles['nivel_terminado']
             if nivel_terminado == 1:

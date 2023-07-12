@@ -14,7 +14,7 @@ from nivel import *
 from constantes import *
 from enemigo_secundario import *
 class NivelTres:
-    def __init__(self,volumen_global):
+    def __init__(self,menu_principal):
         self.lista_items_puntos = []
         self.lista_items_curacion=[]
         self.lista_plataforma = []
@@ -32,15 +32,26 @@ class NivelTres:
         self.fondo=pygame.image.load("pygame/sources/fondos/background_jungle.jpg")
         self.fondo = pygame.transform.scale(self.fondo,TAMAÑO_PANTALA)
         self.recompensa=False
-        
-        self.form_set_pausa = Form("set_pausa", self.pantalla, ANCHO - 200 - 10, 10, 200, 50, (165, 42, 42), (0, 0, 255), active=True, imagen="pygame/sources/menu/letras blancas/menu principal/salir.jpg")
 
-        self.form_pausa = Form("pausa", self.pantalla, ANCHO/2, 10, 200, 50, (165, 42, 42), (0, 0, 255), active=False, imagen="pygame/sources/menu/letras blancas/menu principal/jugar.jpg")
+        pygame.mixer.init()
+        pygame.mixer.music.load("C:/Users/botta/Documents/pyton/pygame/sources/sonidos/tema_principal.mp3")
+        pygame.mixer.music.play(loops=-1)
+        
+        
+        self.form_set_pausa = Form("set_pausa", self.pantalla, ANCHO - 200, 30, 100, 50, (165, 42, 42), (0, 0, 255), active=True, imagen="pygame/sources/menu/letras blancas/menu principal/salir.jpg")
+
+        self.form_pausa = Form("pausa", self.pantalla, ANCHO/2, 50, 100, 50, (165, 42, 42), (0, 0, 255), active=False, imagen="pygame/sources/menu/letras blancas/menu principal/jugar.jpg")
+        
+        form_volumen_mas = Form("subirVolumen",self.pantalla, ANCHO//2, ALTO // 2 -50, 100, 50, (165, 42, 42), (0, 0, 255),active=False,imagen ="pygame/sources/menu/letras blancas/menu principal/subirVolumen.jpg")
+        form_volumen_menos = Form("bajarVolumen",self.pantalla, ANCHO//2, ALTO // 2, 100, 50, (165, 42, 42), (255, 0, 0), active=False,imagen = "pygame/sources/menu/letras blancas/menu principal/bajarVolumen.jpg")
+        form_volumen_switch = Form("cambiarVolumen",self.pantalla, ANCHO//2, ALTO // 2 +50, 100, 50, (165, 42, 42), (0, 255, 0), active=False,imagen = "pygame/sources/menu/letras blancas/menu principal/alternarVolumen.jpg")
+        
+        self.menu_pausa=[form_volumen_mas ,form_volumen_menos, form_volumen_switch]
 
         self.pantalla.blit(self.fondo, (0, 0))
         self.enemigo_camina_lvl3_tamaño=reescalar_imagenes(enemigo_camina_lvl3,100,50)
         self.lista_plataforma.append(Plataforma(nivel_2_plataforma_normal,"visible",self.pantalla,(ANCHO/2) ,(ALTO/2)))
-        self.lista_plataforma.append(Plataforma(nivel_2_plataforma_normal,"visible",self.pantalla,(ANCHO/2-400),(ALTO/2+200)))
+        self.lista_plataforma.append(Plataforma(nivel_2_plataforma_normal,"visible",self.pantalla,(ANCHO/2-ANCHO//2),(ALTO/2+200)))
         self.lista_plataforma.append(Plataforma(piso_jungla,"visible",self.pantalla,(ANCHO-ANCHO),(ALTO/2+400)))
         self.lista_plataforma.append(Plataforma(arbol_jungla,"visible",self.pantalla,(ANCHO/2-800),(ALTO/2)))
         self.lista_plataforma.append(Plataforma(arbol_jungla,"visible",self.pantalla,(ANCHO/2+600),(ALTO/2)))
@@ -69,8 +80,8 @@ class NivelTres:
         self.lista_enemigos.append(self.personaje_enemigo)
         self.sonido_daño = pygame.mixer.Sound("C:/Users/botta/Documents/pyton/pygame/sources/sonidos/damage.mp3")
         self.sonido_puntos= pygame.mixer.Sound("C:/Users/botta/Documents/pyton/pygame/sources/sonidos/coin.mp3")
-        self.sonido_daño.set_volume(volumen_global)
-        self.sonido_puntos.set_volume(volumen_global)
+        self.sonido_daño.set_volume(menu_principal.volumen_global)
+        self.sonido_puntos.set_volume(menu_principal.volumen_global)
 
     def spawnear_enemigos(self):
         if self.contador_enemigos_derrotados%5 == 0 and  self.contador_enemigos_derrotados!=0:
@@ -116,15 +127,34 @@ class NivelTres:
                 self.lista_enemigos.append(enemigo)
             self.enemigos_restantes=0
 
-    def actualizar(self,que_hace,mouse_pos):
+    def actualizar(self,que_hace,mouse_pos,menu_principal):
+        pygame.mixer.music.set_volume(menu_principal.volumen_global)
         if self.paused:
+            
             self.pantalla.blit(self.fondo, (0, 0))
+            for form in self.menu_pausa:
+                form.draw_if_active(self.pantalla)
+                if form.clicked(mouse_pos):
+                        if form.nombre=="subirVolumen":
+                            if menu_principal.volumen_global<=1 and menu_principal.volumen_global>=0:
+                                menu_principal.volumen_global+=0.1
+                        elif form.nombre=="bajarVolumen":
+                            if menu_principal.volumen_global<=1 and menu_principal.volumen_global>=0:
+                                menu_principal.volumen_global-=0.1
+                                
+                        elif form.nombre=="cambiarVolumen":
+                            if menu_principal.volumen_global>0:
+                                menu_principal.volumen_global=0
+                            else:
+                                menu_principal.volumen_global=1
             self.form_pausa.draw_if_active(self.pantalla)  
             if self.form_pausa.clicked(mouse_pos):
                 self.form_pausa.set_active(False)
                 self.form_set_pausa.set_active(True)
                 self.paused=False
         else:
+            for form in self.menu_pausa:
+                form.set_active(False)
             self.pantalla.blit(self.fondo, (0, 0))
 
             self.plataformas = self.lista_plataforma
@@ -174,6 +204,8 @@ class NivelTres:
             self.form_set_pausa.draw_if_active(self.pantalla)
 
             if self.form_set_pausa.clicked(mouse_pos):
+                    for form in self.menu_pausa:
+                        form.set_active(True)
                     self.form_set_pausa.set_active(False)
                     self.form_pausa.set_active(True)
                     self.paused=True

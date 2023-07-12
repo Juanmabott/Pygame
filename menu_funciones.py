@@ -7,15 +7,13 @@ import warnings
 class Menu():
     def __init__(self):
         pygame.init()
-        pygame.mixer.init()
-        pygame.mixer.music.load("C:/Users/botta/Documents/pyton/pygame/sources/sonidos/tema_principal.mp3")
         
         self.fondo=pygame.image.load("C:/Users/botta/Documents/pyton/pygame/sources/fondos/background1-720.png")  
         self.nivel_iniciado=False
         self.window_width = 800
         self.window_height = 600
         self.window = pygame.display.set_mode((self.window_width, self.window_height))
-
+        self.volumen_global=0.5
         self.form_pedir_nombre=Form("seleccionar_nombre",self.window, self.window_width//2 , self.window_height // 2 - 80, 100, 100, (0, 0, 0), (0, 0, 255), active=True,imagen = "C:/Users/botta/Documents/pyton/pygame/sources/fondos/background1-720.png")
         self.nombre_jugador=self.form_pedir_nombre.ingresar_nombre_jugador(self.window)
         self.window.blit( self.fondo, (0, 0))
